@@ -1,2 +1,5 @@
 # XMLDB
-XML Database
+@Author: ZHU, Chenfeng
+XML Database and Semantic Web
+
+
