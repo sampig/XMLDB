@@ -13,16 +13,18 @@ return
 <CITY> {$city} </CITY>
    {
     for $s in $session
+    let $p := $s/parent::z:Production
+    let $v := $doc//z:City/z:Venue[@venueid=$s/z:VenueName/@venueid]
     return
         <SESSION>
             <STARTTIME>{$s/z:Starttime/text()}</STARTTIME>
             <VENUENAME>{$s/z:VenueName/text()}</VENUENAME>
-            <TITLE>{$s/parent::z:Production/z:Title/text()}</TITLE>
+            <TITLE>{$p/z:Title/text()}</TITLE>
             <WEBSITE>
-            {if ($s/parent::z:Production/z:Website/z:Official) then <OFFICIAL>{$s/parent::z:Production/z:Website/z:Official/text()}</OFFICIAL> else ""}
-            {if ($s/parent::z:Production/z:Website/z:Trailer) then <TRAILER>{$s/parent::z:Production/z:Website/z:Trailer/text()}</TRAILER> else ""}
+            {if ($p/z:Website/z:Official) then <OFFICIAL>{$p/z:Website/z:Official/text()}</OFFICIAL> else ""}
+            {if ($p/z:Website/z:Trailer) then <TRAILER>{$p/z:Website/z:Trailer/text()}</TRAILER> else ""}
             </WEBSITE>
-            <ADDRESS>{$doc//z:City/z:Venue[@venueid=$s/z:VenueName/@venueid]/z:VenueAddress/text()}</ADDRESS>
+            <ADDRESS>{$v/z:VenueAddress/text()}</ADDRESS>
         </SESSION>
    }
 </RESULT>

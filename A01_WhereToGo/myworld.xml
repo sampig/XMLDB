@@ -12,19 +12,19 @@
                 <Trailer>http://www.adtrailer.com/agency/wtg/movieweek</Trailer>
             </Website>
             <Session>
-                <VenueName venueid="123001" keyword="true">Kronenplatz</VenueName>
+                <VenueName venueid="456001" keyword="true">Goslar_ZOB</VenueName>
                 <Startdate keyword="true">2015-04-15</Startdate>
-                <Starttime>20:00:00</Starttime>
+                <Starttime>20:30:00</Starttime>
             </Session>
             <Session>
                 <VenueName venueid="123001" keyword="true">Kronenplatz</VenueName>
                 <Startdate keyword="true">2015-04-16</Startdate>
-                <Starttime>19:00:00</Starttime>
+                <Starttime>20:00:00</Starttime>
             </Session>
             <Session>
-                <VenueName venueid="123002" keyword="true">IZC</VenueName>
+                <VenueName venueid="123001" keyword="true">Kronenplatz</VenueName>
                 <Startdate keyword="true">2015-04-17</Startdate>
-                <Starttime>20:00:00</Starttime>
+                <Starttime>19:00:00</Starttime>
             </Session>
             <ProductionKind>
                 <KindName keyword="true">Movie</KindName>
@@ -57,7 +57,7 @@
             <Session>
                 <VenueName venueid="456001" keyword="true">Goslar_ZOB</VenueName>
                 <Startdate keyword="true">2015-04-15</Startdate>
-                <Starttime>20:30:00</Starttime>
+                <Starttime>20:00:00</Starttime>
             </Session>
             <ProductionKind>
                 <KindName keyword="true">Movie</KindName>
@@ -98,9 +98,9 @@
             <Description keyword="true">Concert in April.</Description>
             <Website/>
             <Session>
-                <VenueName venueid="456001" keyword="true">Goslar_ZOB</VenueName>
-                <Startdate keyword="true">2015-04-15</Startdate>
-                <Starttime>20:30:00</Starttime>
+                <VenueName venueid="123002" keyword="true">IZC</VenueName>
+                <Startdate keyword="true">2015-04-17</Startdate>
+                <Starttime>20:00:00</Starttime>
             </Session>
             <ProductionKind>
                 <KindName keyword="true">Concert</KindName>
@@ -114,8 +114,28 @@
             <Website/>
             <Session>
                 <VenueName venueid="789001" keyword="true">HannoverHbf</VenueName>
+                <Startdate keyword="true">2015-04-10</Startdate>
+                <Starttime>19:30:00</Starttime>
+            </Session>
+            <Session>
+                <VenueName venueid="456002" keyword="true">Goslarer_Theater</VenueName>
                 <Startdate keyword="true">2015-04-15</Startdate>
-                <Starttime>20:30:00</Starttime>
+                <Starttime>19:00:00</Starttime>
+            </Session>
+            <ProductionKind>
+                <KindName keyword="true">TheatrePlay</KindName>
+                <TheatrePlay/>
+            </ProductionKind>
+        </Production>
+        <!-- P5 -->
+        <Production>
+            <Title keyword="true">Special TheatrePlay</Title>
+            <Description keyword="true">Special TheatrePlay in the morning.</Description>
+            <Website/>
+            <Session>
+                <VenueName venueid="456002" keyword="true">Goslarer_Theater</VenueName>
+                <Startdate keyword="true">2015-04-15</Startdate>
+                <Starttime>09:30:00</Starttime>
             </Session>
             <ProductionKind>
                 <KindName keyword="true">TheatrePlay</KindName>
@@ -128,12 +148,12 @@
         <CityName keyword="true">Clausthal-Zellerfeld</CityName>
         <Venue venueid="123001">
             <VenueName>Kronenplatz</VenueName>
-            <VenueAddress>Kronenplatz, Clausthal-Zellerfeld</VenueAddress>
+            <VenueAddress>Kronenplatz 3, 38678 Clausthal-Zellerfeld</VenueAddress>
             <VenueContact>0049 17612345678</VenueContact>
         </Venue>
         <Venue venueid="123002">
             <VenueName>IZC</VenueName>
-            <VenueAddress>International Zentrum Clausthal, Clausthal-Zellerfeld</VenueAddress>
+            <VenueAddress>International Center Clausthal, Graupenstraße 11, 38678 Clausthal-Zellerfeld</VenueAddress>
             <VenueContact>0049 17612345678</VenueContact>
         </Venue>
         <Venue venueid="123003">
@@ -146,7 +166,12 @@
         <CityName keyword="true">Goslar</CityName>
         <Venue venueid="456001">
             <VenueName>Goslar_ZOB</VenueName>
-            <VenueAddress>ZOB, Goslar</VenueAddress>
+            <VenueAddress>Klubgartenstraße 12, 38640 Goslar</VenueAddress>
+            <VenueContact>0049 17612345678</VenueContact>
+        </Venue>
+        <Venue venueid="456002">
+            <VenueName>Goslarer_Theater</VenueName>
+            <VenueAddress>Breite Straße 86, 38640 Goslar</VenueAddress>
             <VenueContact>0049 17612345678</VenueContact>
         </Venue>
     </City>
