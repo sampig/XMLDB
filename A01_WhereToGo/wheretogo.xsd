@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2015 sp1 (x64) (http://www.altova.com) by Chenfeng Zhu (TU Clausthal, Institut für Informatik) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://tuc.de/zhuchenfeng" targetNamespace="http://tuc.de/zhuchenfeng" elementFormDefault="qualified" attributeFormDefault="unqualified">
+    <xs:element name="MyWorld" type="worldType">
+        <xs:annotation>
+            <xs:documentation>MyWorld is a DB.</xs:documentation>
+        </xs:annotation>
+        <xs:unique name="productionTitle">
+            <xs:selector xpath="Agency/Production"/>
+            <xs:field xpath="Title"/>
+        </xs:unique>
+        <xs:key name="venueKEY">
+            <xs:selector xpath="City/Venue"/>
+            <xs:field xpath="@venueid"/>
+        </xs:key>
+        <xs:keyref name="venueKEYref" refer="venueKEY">
+            <xs:selector xpath="Agency/Production/Session/VenueName"/>
+            <xs:field xpath="@venueid"/>
+        </xs:keyref>
+    </xs:element>
+    <xs:complexType name="worldType">
+        <xs:sequence>
+            <xs:element name="Agency">
+                <xs:annotation>
+                    <xs:documentation>WhereToGo is an entertainment ticketing Agency that offers customers to book tickets for events and shows throughout Europe.</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="myProductions">
+                            <xs:attribute name="Agencyname" type="xs:string"/>
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="City" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="CityName">
+                            <xs:complexType>
+                                <xs:simpleContent>
+                                    <xs:extension base="xs:string">
+                                        <xs:attribute name="keyword" type="xs:boolean"/>
+                                    </xs:extension>
+                                </xs:simpleContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="Venue" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="myVenue">
+                                        <xs:attribute name="venueid" type="xs:int"/>
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="myProductions">
+        <xs:annotation>
+            <xs:documentation>WhereToGo sells tickets for a variety of productions.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Production" type="myProduction" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="myProduction">
+        <xs:sequence>
+            <xs:element name="Title">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                            <xs:attribute name="keyword" type="xs:boolean"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Description">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                            <xs:attribute name="keyword" type="xs:boolean"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Website" minOccurs="0">
+                <!--
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                            <xs:attribute name="WebType" type="myWebType"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+                -->
+                <xs:complexType>
+                    <xs:all>
+                        <xs:element name="Official" type="xs:anyURI" minOccurs="0"/>
+                        <xs:element name="Trailer" type="xs:anyURI" minOccurs="0"/>
+                    </xs:all>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Session" type="mySession" maxOccurs="unbounded"/>
+            <xs:element name="ProductionKind" type="myProductionKind">
+                <xs:annotation>
+                    <xs:documentation>One PRODUCTION only belongs to one KIND.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Feedback" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>PRODUCTIONS could have no or one or more feedbacks. One feedback could contain review and/or rating.</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Review" type="xs:string" minOccurs="0"/>
+                        <xs:element name="Rating" type="ratingStar" minOccurs="0">
+                            <xs:annotation>
+                                <xs:documentation>A Rating must be 1-5 stars.</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="mySession">
+        <xs:annotation>
+            <xs:documentation>One SESSION has only one VENUE.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="VenueName">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                            <xs:attribute name="venueid" type="xs:int"/>
+                            <xs:attribute name="keyword" type="xs:boolean"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Startdate">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:date">
+                            <xs:attribute name="keyword" type="xs:boolean"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Starttime" type="xs:time"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="myVenue">
+        <xs:sequence>
+            <xs:element name="VenueName" type="xs:string"/>
+            <xs:element name="VenueAddress" type="xs:string"/>
+            <xs:element name="VenueContact" type="phoneNumber"/>
+            <xs:element name="Website" type="xs:anyURI" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="myProductionKind">
+        <xs:annotation>
+            <xs:documentation>One PRODUCTION only belongs to one KIND.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="KindName">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="myKindName">
+                            <xs:attribute name="keyword" type="xs:boolean"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Name" type="xs:string" minOccurs="0"/>
+            <xs:choice>
+                <xs:element name="Movie" type="myMovie"/>
+                <xs:element name="Concert" type="myConcert"/>
+                <xs:element name="Musical" type="myMusical"/>
+                <xs:element name="TheatrePlay" type="myTheatrePlay"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="phoneNumber">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9][0-9][0-9][0-9] [0-9]+"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="myMovie">
+        <xs:sequence>
+            <xs:element name="Director" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                            <xs:attribute name="keyword" type="xs:boolean"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Cast">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Actor" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:simpleContent>
+                                    <xs:extension base="xs:string">
+                                        <xs:attribute name="keyword" type="xs:boolean"/>
+                                    </xs:extension>
+                                </xs:simpleContent>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="myConcert"/>
+    <xs:complexType name="myMusical"/>
+    <xs:complexType name="myTheatrePlay"/>
+    <xs:simpleType name="myKindName">
+        <xs:annotation>
+            <xs:documentation>The Kind of a PRODUCTION could only be Movie, Concert, Musical or TheatrePlay.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Movie"/>
+            <xs:enumeration value="Concert"/>
+            <xs:enumeration value="Musical"/>
+            <xs:enumeration value="TheatrePlay"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="ratingStar">
+        <xs:restriction base="xs:int">
+            <xs:minInclusive value="1"/>
+            <xs:maxInclusive value="5"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

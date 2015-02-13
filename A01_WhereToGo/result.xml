@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DB xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="wheretogo.xsd">
+    <!-- Only one Agency - WhereToGo for now.-->
+    <Agency Agencyname="WhereToGo">
+        <!-- P1 -->
+        <Production>
+            <Title keyword="true">Movie Week</Title>
+            <Description keyword="true">The whole week!</Description>
+            <Website>
+                <Official>http://www.movieweek.com</Official>
+                <Trailer>http://www.adtrailer.com/agency/wtg/movieweek</Trailer>
+            </Website>
+            <Session>
+                <VenueName venueid="123001" keyword="true">Kronenplatz</VenueName>
+                <Startdate keyword="true">2015-04-15</Startdate>
+                <Starttime>20:00:00</Starttime>
+            </Session>
+            <Session>
+                <VenueName venueid="123001" keyword="true">Kronenplatz</VenueName>
+                <Startdate keyword="true">2015-04-16</Startdate>
+                <Starttime>19:00:00</Starttime>
+            </Session>
+            <Session>
+                <VenueName venueid="123002" keyword="true">IZC</VenueName>
+                <Startdate keyword="true">2015-04-17</Startdate>
+                <Starttime>20:00:00</Starttime>
+            </Session>
+            <ProductionKind>
+                <KindName keyword="true">Movie</KindName>
+                <Name>Tom and Jerry</Name>
+                <Movie>
+                    <Director keyword="true">Tom</Director>
+                    <Cast>
+                        <Actor keyword="true">Jerry</Actor>
+                    </Cast>
+                </Movie>
+            </ProductionKind>
+            <Feedback>
+                <Review>This movie is wonderful.</Review>
+                <Rating>5</Rating>
+            </Feedback>
+            <Feedback>
+                <Review>This movie is good.</Review>
+            </Feedback>
+            <Feedback>
+                <Rating>5</Rating>
+            </Feedback>
+        </Production>
+        <!-- P2 -->
+        <Production>
+            <Title keyword="true">Movie April</Title>
+            <Description keyword="true">Movie in April.</Description>
+            <Website>
+                <Official>http://www.movieapirl.com</Official>
+            </Website>
+            <Session>
+                <VenueName venueid="456001" keyword="true">Goslar_ZOB</VenueName>
+                <Startdate keyword="true">2015-04-15</Startdate>
+                <Starttime>20:30:00</Starttime>
+            </Session>
+            <ProductionKind>
+                <KindName keyword="true">Movie</KindName>
+                <Name>Lego</Name>
+                <Movie>
+                    <Director>Rose</Director>
+                    <Cast>
+                        <Actor>Will</Actor>
+                    </Cast>
+                </Movie>
+            </ProductionKind>
+        </Production>
+        <!-- P3 -->
+        <Production>
+            <Title keyword="true">Musical Weekend</Title>
+            <Description keyword="true">Musical at Weekend.</Description>
+            <Website>
+                <Trailer>http://www.trailer.com/agency/wtg/movieweekend</Trailer>
+            </Website>
+            <Session>
+                <VenueName venueid="456001" keyword="true">Goslar_ZOB</VenueName>
+                <Startdate keyword="true">2015-03-07</Startdate>
+                <Starttime>19:30:00</Starttime>
+            </Session>
+            <Session>
+                <VenueName venueid="456001" keyword="true">Goslar_ZOB</VenueName>
+                <Startdate keyword="true">2015-03-08</Startdate>
+                <Starttime>19:30:00</Starttime>
+            </Session>
+            <ProductionKind>
+                <KindName keyword="true">Musical</KindName>
+                <Musical/>
+            </ProductionKind>
+        </Production>
+        <!-- P4 -->
+        <Production>
+            <Title keyword="true">Concert</Title>
+            <Description keyword="true">Concert</Description>
+            <Website/>
+            <Session>
+                <VenueName venueid="456001" keyword="true">Goslar_ZOB</VenueName>
+                <Startdate keyword="true">2015-04-15</Startdate>
+                <Starttime>20:30:00</Starttime>
+            </Session>
+            <ProductionKind>
+                <KindName keyword="true">Concert</KindName>
+                <Concert/>
+            </ProductionKind>
+        </Production>
+        <!-- P5 -->
+        <Production>
+            <Title keyword="true">TheatrePlay</Title>
+            <Description keyword="true">TheatrePlay</Description>
+            <Website/>
+            <Session>
+                <VenueName venueid="789001" keyword="true">HannoverHbf</VenueName>
+                <Startdate keyword="true">2015-04-15</Startdate>
+                <Starttime>20:30:00</Starttime>
+            </Session>
+            <ProductionKind>
+                <KindName keyword="true">TheatrePlay</KindName>
+                <TheatrePlay/>
+            </ProductionKind>
+        </Production>
+    </Agency>
+    <!-- City List -->
+    <City>
+        <CityName keyword="true">Clausthal-Zellerfeld</CityName>
+        <Venue venueid="123001">
+            <VenueName>Kronenplatz</VenueName>
+            <VenueAddress>Kronenplatz, Clausthal-Zellerfeld</VenueAddress>
+            <VenueContact>0049 17612345678</VenueContact>
+        </Venue>
+        <Venue venueid="123002">
+            <VenueName>IZC</VenueName>
+            <VenueAddress>International Zentrum Clausthal, Clausthal-Zellerfeld</VenueAddress>
+            <VenueContact>0049 17612345678</VenueContact>
+        </Venue>
+        <Venue venueid="123003">
+            <VenueName>CLZ_ZOB</VenueName>
+            <VenueAddress>ZOB, Clausthal-Zellerfeld</VenueAddress>
+            <VenueContact>0049 17612345678</VenueContact>
+        </Venue>
+    </City>
+    <City>
+        <CityName keyword="true">Goslar</CityName>
+        <Venue venueid="456001">
+            <VenueName>Goslar_ZOB</VenueName>
+            <VenueAddress>ZOB, Goslar</VenueAddress>
+            <VenueContact>0049 17612345678</VenueContact>
+        </Venue>
+    </City>
+    <City>
+        <CityName keyword="true">Hannover</CityName>
+        <Venue venueid="789001">
+            <VenueName>HannoverHbf</VenueName>
+            <VenueAddress>Hauptbahnhof, Hannover</VenueAddress>
+            <VenueContact>0049 17612345678</VenueContact>
+        </Venue>
+        <Venue venueid="789002">
+            <VenueName>HannoverFlughafen</VenueName>
+            <VenueAddress>Flughafen, Hannover</VenueAddress>
+            <VenueContact>0049 17612345678</VenueContact>
+        </Venue>
+    </City>
+</DB>
