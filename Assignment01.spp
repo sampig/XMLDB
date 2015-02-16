@@ -6,6 +6,8 @@
 	</Folder>
 	<Folder FolderName="XSL Files" ExtStr="xsl;xslt"/>
 	<Folder FolderName="XQuery Files" ExtStr="xq;xql;xquery">
+		<File FilePath="A01_WhereToGo\query_global.xql" HomeFolder="Yes"/>
+		<File FilePath="A01_WhereToGo\query_keyword.xql" HomeFolder="Yes"/>
 		<File FilePath="A01_WhereToGo\query_special.xql" HomeFolder="Yes"/>
 	</Folder>
 	<Folder FolderName="HTML Files" ExtStr="html;htm;xhtml;asp"/>

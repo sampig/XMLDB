@@ -6,6 +6,7 @@ let $date := xs:date("2015-04-15")
 let $city := xs:string("Goslar")
 let $doc := doc("myworld.xml")
 let $session := $doc//z:Production/z:Session[z:Startdate=$date][z:VenueName/@venueid=$doc//z:City[z:CityName/text()=$city]/z:Venue/@venueid]
+let $head := "<!DOCTYPE RESULT SYSTEM 'wheretogo.dtd'>"
 
 return
 <RESULT xmlns="">

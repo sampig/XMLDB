@@ -158,6 +158,7 @@
             <xs:element name="VenueName" type="xs:string"/>
             <xs:element name="VenueAddress" type="xs:string"/>
             <xs:element name="VenueContact" type="phoneNumber"/>
+            <xs:element name="VenueType" type="venueType" minOccurs="0"/>
             <xs:element name="Website" type="xs:anyURI" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
@@ -235,6 +236,16 @@
         <xs:restriction base="xs:int">
             <xs:minInclusive value="1"/>
             <xs:maxInclusive value="5"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="venueType">
+        <xs:annotation>
+            <xs:documentation>The VENUE could only be Cinema, Theatre or others.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Cinema"/>
+            <xs:enumeration value="Theatre"/>
+            <xs:enumeration value="Others"/>
         </xs:restriction>
     </xs:simpleType>
 </xs:schema>
