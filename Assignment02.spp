@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project>
+	<Folder FolderName="XML Files" ExtStr="xml;cml;math;rdf;smil;svg;wml">
+		<File FilePath="A02_WhereToGo\result.xml" HomeFolder="Yes"/>
+	</Folder>
+	<Folder FolderName="XSL Files" ExtStr="xsl;xslt">
+		<File FilePath="A02_WhereToGo\wheretogo.xslt" HomeFolder="Yes"/>
+	</Folder>
+	<Folder FolderName="XQuery Files" ExtStr="xq;xql;xquery"/>
+	<Folder FolderName="HTML Files" ExtStr="html;htm;xhtml;asp">
+		<File FilePath="A02_WhereToGo\result_xsl.html" HomeFolder="Yes"/>
+	</Folder>
+	<Folder FolderName="DTD/Schemas" ExtStr="dtd;dcd;xdr;biz;xsd">
+		<File FilePath="A02_WhereToGo\wheretogo_result.dtd" HomeFolder="Yes"/>
+	</Folder>
+	<Folder FolderName="Entities" ExtStr="ent"/>
+</Project>

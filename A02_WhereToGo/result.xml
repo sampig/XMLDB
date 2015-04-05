@@ -1,0 +1,40 @@
+<!DOCTYPE RESULT SYSTEM "wheretogo_result.dtd">
+<RESULT>
+    <CONDITION>
+        <DATE>2015-04-15</DATE>
+        <CITY>Goslar</CITY>
+    </CONDITION>
+    <SESSION>
+        <STARTTIME>20:30:00</STARTTIME>
+        <VENUENAME>Goslar_ZOB</VENUENAME>
+        <TITLE>Movie Week</TITLE>
+        <WEBSITE>
+            <OFFICIAL>http://www.movieweek.com</OFFICIAL>
+            <TRAILER>http://www.adtrailer.com/agency/wtg/movieweek</TRAILER>
+        </WEBSITE>
+        <ADDRESS>Klubgartenstraße 12, 38640 Goslar</ADDRESS>
+    </SESSION>
+    <SESSION>
+        <STARTTIME>20:00:00</STARTTIME>
+        <VENUENAME>Goslar_ZOB</VENUENAME>
+        <TITLE>Movie April</TITLE>
+        <WEBSITE>
+            <OFFICIAL>http://www.movieapirl.com</OFFICIAL>
+        </WEBSITE>
+        <ADDRESS>Klubgartenstraße 12, 38640 Goslar</ADDRESS>
+    </SESSION>
+    <SESSION>
+        <STARTTIME>19:00:00</STARTTIME>
+        <VENUENAME>Goslarer_Theater</VENUENAME>
+        <TITLE>TheatrePlay April</TITLE>
+        <WEBSITE/>
+        <ADDRESS>Breite Straße 86, 38640 Goslar</ADDRESS>
+    </SESSION>
+    <SESSION>
+        <STARTTIME>09:30:00</STARTTIME>
+        <VENUENAME>Goslarer_Theater</VENUENAME>
+        <TITLE>Special TheatrePlay</TITLE>
+        <WEBSITE/>
+        <ADDRESS>Breite Straße 86, 38640 Goslar</ADDRESS>
+    </SESSION>
+</RESULT>
