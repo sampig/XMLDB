@@ -13,7 +13,7 @@
 	<Folder FolderName="HTML Files" ExtStr="html;htm;xhtml;asp"/>
 	<Folder FolderName="Entities" ExtStr="ent"/>
 	<Folder FolderName="DTD/Schemas" ExtStr="dtd;dcd;xdr;biz;xsd">
-		<File FilePath="A01_WhereToGo\wheretogo.dtd" HomeFolder="Yes"/>
 		<File FilePath="A01_WhereToGo\wheretogo.xsd" HomeFolder="Yes"/>
+		<File FilePath="A01_WhereToGo\wheretogo_result.dtd" HomeFolder="Yes"/>
 	</Folder>
 </Project>

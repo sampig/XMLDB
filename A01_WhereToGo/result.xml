@@ -1,7 +1,9 @@
-<!DOCTYPE RESULT SYSTEM "wheretogo.dtd">
+<!DOCTYPE RESULT SYSTEM "wheretogo_result.dtd">
 <RESULT>
-    <DATE>2015-04-15</DATE>
-    <CITY>Goslar</CITY>
+    <CONDITION>
+        <DATE>2015-04-15</DATE>
+        <CITY>Goslar</CITY>
+    </CONDITION>
     <SESSION>
         <STARTTIME>20:30:00</STARTTIME>
         <VENUENAME>Goslar_ZOB</VENUENAME>

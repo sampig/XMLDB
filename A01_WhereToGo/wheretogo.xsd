@@ -14,7 +14,7 @@
             <xs:field xpath="@venueid"/>
         </xs:key>
         <xs:keyref name="venueKEYref" refer="venueKEY">
-            <xs:selector xpath="Agency/Production/Session/VenueName"/>
+            <xs:selector xpath="Agency/Production/Session/Venue"/>
             <xs:field xpath="@venueid"/>
         </xs:keyref>
     </xs:element>
@@ -32,29 +32,10 @@
                     </xs:complexContent>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="City" maxOccurs="unbounded">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element name="CityName">
-                            <xs:complexType>
-                                <xs:simpleContent>
-                                    <xs:extension base="xs:string">
-                                        <xs:attribute name="keyword" type="xs:boolean"/>
-                                    </xs:extension>
-                                </xs:simpleContent>
-                            </xs:complexType>
-                        </xs:element>
-                        <xs:element name="Venue" maxOccurs="unbounded">
-                            <xs:complexType>
-                                <xs:complexContent>
-                                    <xs:extension base="myVenue">
-                                        <xs:attribute name="venueid" type="xs:int"/>
-                                    </xs:extension>
-                                </xs:complexContent>
-                            </xs:complexType>
-                        </xs:element>
-                    </xs:sequence>
-                </xs:complexType>
+            <xs:element name="City" type="myCity" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>All the Cities all over the world.</xs:documentation>
+                </xs:annotation>
             </xs:element>
         </xs:sequence>
     </xs:complexType>
@@ -131,14 +112,9 @@
             <xs:documentation>One SESSION has only one VENUE.</xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="VenueName">
+            <xs:element name="Venue">
                 <xs:complexType>
-                    <xs:simpleContent>
-                        <xs:extension base="xs:string">
-                            <xs:attribute name="venueid" type="xs:int"/>
-                            <xs:attribute name="keyword" type="xs:boolean"/>
-                        </xs:extension>
-                    </xs:simpleContent>
+                    <xs:attribute name="venueid" type="xs:positiveInteger"/>
                 </xs:complexType>
             </xs:element>
             <xs:element name="Startdate">
@@ -153,9 +129,39 @@
             <xs:element name="Starttime" type="xs:time"/>
         </xs:sequence>
     </xs:complexType>
+    <xs:complexType name="myCity">
+        <xs:sequence>
+            <xs:element name="CityName">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                            <xs:attribute name="keyword" type="xs:boolean"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Venue" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="myVenue">
+                            <xs:attribute name="venueid" type="xs:positiveInteger"/>
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
     <xs:complexType name="myVenue">
         <xs:sequence>
-            <xs:element name="VenueName" type="xs:string"/>
+            <xs:element name="VenueName">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                            <xs:attribute name="keyword" type="xs:boolean"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
             <xs:element name="VenueAddress" type="xs:string"/>
             <xs:element name="VenueContact" type="phoneNumber"/>
             <xs:element name="VenueType" type="venueType" minOccurs="0"/>

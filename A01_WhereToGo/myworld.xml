@@ -12,17 +12,17 @@
                 <Trailer>http://www.adtrailer.com/agency/wtg/movieweek</Trailer>
             </Website>
             <Session>
-                <VenueName venueid="456001" keyword="true">Goslar_ZOB</VenueName>
+                <Venue venueid="456001"/>
                 <Startdate keyword="true">2015-04-15</Startdate>
                 <Starttime>20:30:00</Starttime>
             </Session>
             <Session>
-                <VenueName venueid="123001" keyword="true">Kronenplatz</VenueName>
+                <Venue venueid="123001"/>
                 <Startdate keyword="true">2015-04-16</Startdate>
                 <Starttime>20:00:00</Starttime>
             </Session>
             <Session>
-                <VenueName venueid="123001" keyword="true">Kronenplatz</VenueName>
+                <Venue venueid="123001"/>
                 <Startdate keyword="true">2015-04-17</Startdate>
                 <Starttime>19:00:00</Starttime>
             </Session>
@@ -55,7 +55,7 @@
                 <Official>http://www.movieapirl.com</Official>
             </Website>
             <Session>
-                <VenueName venueid="456001" keyword="true">Goslar_ZOB</VenueName>
+                <Venue venueid="456001"/>
                 <Startdate keyword="true">2015-04-15</Startdate>
                 <Starttime>20:00:00</Starttime>
             </Session>
@@ -78,12 +78,12 @@
                 <Trailer>http://www.trailer.com/agency/wtg/movieweekend</Trailer>
             </Website>
             <Session>
-                <VenueName venueid="456001" keyword="true">Goslar_ZOB</VenueName>
+                <Venue venueid="456001"/>
                 <Startdate keyword="true">2015-03-07</Startdate>
                 <Starttime>19:30:00</Starttime>
             </Session>
             <Session>
-                <VenueName venueid="456001" keyword="true">Goslar_ZOB</VenueName>
+                <Venue venueid="456001"/>
                 <Startdate keyword="true">2015-03-08</Startdate>
                 <Starttime>19:30:00</Starttime>
             </Session>
@@ -98,7 +98,7 @@
             <Description keyword="true">Concert in April.</Description>
             <Website/>
             <Session>
-                <VenueName venueid="123002" keyword="true">IZC</VenueName>
+                <Venue venueid="123002"/>
                 <Startdate keyword="true">2015-04-17</Startdate>
                 <Starttime>20:00:00</Starttime>
             </Session>
@@ -113,12 +113,12 @@
             <Description keyword="true">TheatrePlay in April.</Description>
             <Website/>
             <Session>
-                <VenueName venueid="789001" keyword="true">HannoverHbf</VenueName>
+                <Venue venueid="789001"/>
                 <Startdate keyword="true">2015-04-10</Startdate>
                 <Starttime>19:30:00</Starttime>
             </Session>
             <Session>
-                <VenueName venueid="456002" keyword="true">Goslarer_Theater</VenueName>
+                <Venue venueid="456002"/>
                 <Startdate keyword="true">2015-04-15</Startdate>
                 <Starttime>19:00:00</Starttime>
             </Session>
@@ -133,7 +133,7 @@
             <Description keyword="true">Special TheatrePlay in the morning.</Description>
             <Website/>
             <Session>
-                <VenueName venueid="456002" keyword="true">Goslarer_Theater</VenueName>
+                <Venue venueid="456002"/>
                 <Startdate keyword="true">2015-04-15</Startdate>
                 <Starttime>09:30:00</Starttime>
             </Session>
