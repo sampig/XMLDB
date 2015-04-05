@@ -1,5 +1,13 @@
-# XMLDB
+XMLDB
+=======
+
 @Author: ZHU, Chenfeng
-XML Database and Semantic Web
+
+This is my homework for XML Database and Semantic Web.
+
+Assignment 01: XML, DTD, XSD and XQuery.
+
+Assignment 02:
+
 
 
