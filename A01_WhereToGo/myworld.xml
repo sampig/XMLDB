@@ -182,12 +182,12 @@
         <CityName keyword="true">Hannover</CityName>
         <Venue venueid="789001">
             <VenueName>HannoverHbf</VenueName>
-            <VenueAddress>Hauptbahnhof, Hannover</VenueAddress>
+            <VenueAddress>Niki-de-Saint-Phalle-Promenade 17, 30159 Hannover</VenueAddress>
             <VenueContact>0049 17612345678</VenueContact>
         </Venue>
         <Venue venueid="789002">
             <VenueName>HannoverFlughafen</VenueName>
-            <VenueAddress>Flughafen, Hannover</VenueAddress>
+            <VenueAddress>Flughafenstraße 4, 30855 Langenhagen, Hannover</VenueAddress>
             <VenueContact>0049 17612345678</VenueContact>
         </Venue>
     </City>
