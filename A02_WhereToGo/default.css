@@ -1,0 +1,60 @@
+body {
+	background-color: #ffffff;
+	color: #000000;
+}
+
+#myHeader {
+    color: #ff0000;
+}
+
+/* DIV for Condition */
+div.condition {
+    font-style: italic;
+    padding: 15px 5px;
+}
+
+/* Table */
+table {
+    border: 1px solid black;
+    margin: 5px;
+    padding: 0px;
+    border-spacing: 0;
+}
+
+table th, table td {
+    border: 1px solid black;
+    text-align: left;
+    margin: 0px;
+    padding: 1px 15px 1px 5px;
+    border-spacing: 0;
+}
+
+table thead * {
+    background-color: #3366FF;
+    color: #FFFFFF;
+    padding: 5px 15px 5px 5px;
+}
+
+table tbody tr:nth-child(odd) {
+    background-color: #99CCFF;
+}
+
+table tbody tr:nth-child(even) {
+}
+
+thead tr th {
+    /*font-style: italic;*/
+    font-weight: bold;
+    font-size: 14pt;
+}
+
+/* Hyperlink */
+a:link {
+    color: #555555;
+    text-decoration: none;
+}
+a:hover {
+    color: #FF0000;
+    text-decoration: underline;
+}
+

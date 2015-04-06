@@ -1,10 +1,12 @@
-<html xsl:version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/1999/XHTML">
+<html xsl:version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/1999/xhtml">
     <head>
+        <link href="default.css" rel="stylesheet" type="text/css"/>
         <title>Search Result</title>
     </head>
     <body>
-        <h1>Search Result</h1>
-        <div>Condition: <xsl:value-of select="RESULT/CONDITION/DATE"/>, <xsl:value-of select="RESULT/CONDITION/CITY"/></div>
+        <h1 id="myHeader">Search Result</h1>
+        <div class="condition">Condition: <xsl:value-of select="RESULT/CONDITION/DATE"/>, <xsl:value-of select="RESULT/CONDITION/CITY"/>
+        </div>
         <table>
             <thead>
                 <tr>

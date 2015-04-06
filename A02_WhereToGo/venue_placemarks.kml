@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/kml/2.2 http://schemas.opengis.net/kml/2.2.0/ogckml22.xsd">
+<!--
+<kml xmlns="http://www.opengis.net/kml/2.2">
+in website (https://kml-samples.googlecode.com/svn/trunk/interactive/index.html), this also works.
+-->
+    <Document>
+        <Style id="style_CLZ">
+            <IconStyle>
+                <Icon>
+                    <href>http://maps.google.com/mapfiles/kml/pal3/icon19.png</href>
+                </Icon>
+            </IconStyle>
+            <BalloonStyle>
+                <text><![CDATA[<b>$[name]</b><br/>$[address]<br/>$[description]]]></text>
+            </BalloonStyle>
+        </Style>
+        <Style id="style_GS">
+            <IconStyle>
+                <Icon>
+                    <href>http://maps.google.com/mapfiles/kml/paddle/wht-blank.png</href>
+                </Icon>
+            </IconStyle>
+        </Style>
+        <Folder>
+            <name>Clausthal-Zellerfeld</name>
+            <open>0</open>
+            <description>All the venues in Clausthal-Zellerfeld</description>
+            <Placemark>
+                <name>Kronenplatz</name>
+                <address>Kronenplatz 3, 38678 Clausthal-Zellerfeld</address>
+                <description>Kronenplatz in Clausthal-Zellerfeld</description>
+                <styleUrl>#style_CLZ</styleUrl>
+                <Point>
+                    <coordinates>10.335720, 51.807099</coordinates>
+                </Point>
+            </Placemark>
+            <Placemark>
+                <name>IZC</name>
+                <address>International Center Clausthal, Graupenstraße 11, 38678 Clausthal-Zellerfeld</address>
+                <description>IZC in Clausthal-Zellerfeld</description>
+                <styleUrl>#style_CLZ</styleUrl>
+                <Point>
+                    <coordinates>10.336643, 51.804240</coordinates>
+                </Point>
+            </Placemark>
+            <Placemark>
+                <name>CLZ_ZOB</name>
+                <address>Bahnhofstraße 7, 38678 Clausthal-Zellerfeld</address>
+                <description>ZOB in Clausthal-Zellerfeld</description>
+                <styleUrl>#style_CLZ</styleUrl>
+                <Point>
+                    <coordinates>10.336697, 51.813547</coordinates>
+                </Point>
+            </Placemark>
+        </Folder>
+        <Folder>
+            <name>Goslar</name>
+            <open>0</open>
+            <description>All the venues in Goslar</description>
+            <Placemark>
+                <name>Goslar_ZOB</name>
+                <address>Klubgartenstraße 12, 38640 Goslar</address>
+                <description>ZOB in Goslar</description>
+                <styleUrl>#style_GS</styleUrl>
+                <Point>
+                    <coordinates>10.421400, 51.910350</coordinates>
+                </Point>
+            </Placemark>
+            <Placemark>
+                <name>Goslarer_Theater</name>
+                <address>Breite Straße 86, 38640 Goslar</address>
+                <description><![CDATA[Theater in Goslar <a href="http://www.goslarertheater.com">here</a>]]></description>
+                <styleUrl>#style_GS</styleUrl>
+                <Point>
+                    <coordinates>10.432130, 51.907718</coordinates>
+                </Point>
+            </Placemark>
+        </Folder>
+        <Folder>
+            <name>Hannover</name>
+            <open>0</open>
+            <description>All the venues in Hannover</description>
+            <Placemark>
+                <name>HannoverHbf</name>
+                <address>Niki-de-Saint-Phalle-Promenade 17, 30159 Hannover</address>
+                <description>Hauptbahnhof in Hannover</description>
+                <Point>
+                    <coordinates>9.741804, 52.377035</coordinates>
+                </Point>
+            </Placemark>
+            <Placemark>
+                <name>HannoverFlughafen</name>
+                <address>Flughafenstraße 4, 30855 Langenhagen, Hannover</address>
+                <description>Flughafen in Hannover</description>
+                <Point>
+                    <coordinates>9.688985, 52.461883</coordinates>
+                </Point>
+            </Placemark>
+        </Folder>
+    </Document>
+</kml>
