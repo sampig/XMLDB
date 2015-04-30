@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:me="http://www.tuc.de/zhuchenfeng#">
+    <rdf:Description rdf:ID="zhuchenfeng">
+        <me:name>Chenfeng ZHU</me:name>
+        <me:cn_name>朱辰丰</me:cn_name>
+        <me:mobile>0176 80827704</me:mobile>
+        <me:university>TU-Clausthal</me:university>
+        <me:program>ITIS</me:program>
+        <me:field rdf:resource="#fields"/>
+        <me:lecturer rdf:resource="#lecturers"/>
+    </rdf:Description>
+    <rdf:Description rdf:ID="fields">
+        <me:tech>
+            <rdf:Bag>
+                <rdf:li>JAVA</rdf:li>
+                <rdf:li>Android</rdf:li>
+                <rdf:li>Database</rdf:li>
+                <rdf:li>Data Mining</rdf:li>
+            </rdf:Bag>
+        </me:tech>
+    </rdf:Description>
+    <rdf:Description rdf:ID="lecturers">
+        <me:teacher>
+            <rdf:Bag>
+                <rdf:li rdf:resource="#hartmann"/>
+                <rdf:li rdf:resource="#moeller"/>
+            </rdf:Bag>
+        </me:teacher>
+    </rdf:Description>
+    <rdf:Description rdf:ID="hartmann">
+        <me:tea_name>Sven Hartmann</me:tea_name>
+        <me:title>Professor</me:title>
+        <me:university>TU-Clausthal</me:university>
+        <me:course>XDB</me:course>
+    </rdf:Description>
+    <rdf:Description rdf:ID="moeller">
+        <me:tea_name>Dietmar Moeller</me:tea_name>
+        <me:title>Professor</me:title>
+        <me:university>TU-Clausthal</me:university>
+        <me:course>IoT</me:course>
+    </rdf:Description>
+</rdf:RDF>

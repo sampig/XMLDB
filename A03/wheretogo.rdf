@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <rdf:Description rdf:about="WhereToGO">
+        <dc:title>Where To Go</dc:title>
+        <dc:description>Where To Go is a famous Travel Agent.</dc:description>
+        <dc:creator>Chenfeng ZHU</dc:creator>
+        <dc:date>27.04.2015</dc:date>
+        <dc:type>Agent</dc:type>
+        <dc:lanuage>English</dc:lanuage>
+    </rdf:Description>
+</rdf:RDF>
