@@ -1,28 +1,20 @@
 declare namespace x="http://www.w3.org/1999/xhtml";
 declare namespace saxon="http://saxon.sf.net/";
-declare namespace functx = "http://www.functx.com";
 
 declare option saxon:output "indent=yes";
 declare option saxon:output "doctype-system=ex01_07.dtd";
 
-declare function functx:is-a-number ( $value as xs:anyAtomicType? )  as xs:boolean {
-   string(number($value)) != 'NaN'
-};
-(: I cannot find a valid url for this lib functx.:)
-
-
-let $main := doc('http://www.geohive.com/cntry/france.aspx')//x:div["wrapper"]
+let $main := doc('http://www.geohive.com/cntry/germany.aspx')//x:div["wrapper"]
 
 let $countryname := $main//x:div["generalinfo"]/x:h1/text()
 let $capname := $main//x:div["generalinfo"]/x:div["infoblock1"]/x:table//x:td[text()="Capital"]/parent::node()/x:td[2]/text()
 let $totalpopulation := format-number(sum((
     for $p in $main//x:div["adminunits"]//x:table[@summary="administrative units"]/x:tbody/x:tr[@class="level2"]
-    let $pop := replace($p/x:td[last()]/text(),",","")
+    let $pop := $p/x:td[last()]/text()
     return
-        if (functx:is-a-number($pop))
-        then number($pop)
-        else number(0)
-        (: I tried empty or normalize-space or zero-length string. none of them works. :)
+        if (empty($pop))
+        then 0
+        else number(replace($pop,",",""))
 )), ",000")
 let $provlink := (
     for $p in $main//x:div["adminunits"]//x:table[@summary="administrative units"]/x:tbody/x:tr[@class="level2"]
@@ -42,7 +34,7 @@ element country {
     attribute capital { $capname },
     element name { $countryname },
     element population { $totalpopulation },
-    element provinces { 
+    element provinces {
         for $province in $provtable/x:tbody/x:tr[@class="level2"]
         let $ccode := $province/x:td[@class="ccode"]/string(.)
         let $provcap := $province/x:td[3]/text()
@@ -69,4 +61,19 @@ element country {
     }
 }
 
+
+(: <!ELEMENT country (name,population,provinces,cities)> :)
+(: <!ELEMENT name (#PCDATA)> :)
+(: <!ELEMENT population (#PCDATA)> :)
+(: <!ELEMENT provinces (province*)> :)
+(: <!ELEMENT cities (city*)> :)
+(: <!ELEMENT province (name,area,population)> :)
+(: <!ELEMENT area (#PCDATA)> :)
+(: <!ELEMENT city (name,population)> :)
+(:  :)
+(: <!ATTLIST country capital IDREF #IMPLIED> :)
+(: <!ATTLIST province capital IDREF #IMPLIED> :)
+(: <!ATTLIST city id ID #REQUIRED> :)
+
+(: declare boundary-space preserve; for format but doesn't work :)
 
