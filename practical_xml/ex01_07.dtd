@@ -1,0 +1,12 @@
+<!ELEMENT country (name,population,provinces,cities)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT population (#PCDATA)>
+<!ELEMENT provinces (province*)>
+<!ELEMENT cities (city*)>
+<!ELEMENT province (name,area,population)>
+<!ELEMENT area (#PCDATA)>
+<!ELEMENT city (name,population)>
+
+<!ATTLIST country capital IDREF #IMPLIED>
+<!ATTLIST province capital IDREF #IMPLIED>
+<!ATTLIST city id ID #REQUIRED>
