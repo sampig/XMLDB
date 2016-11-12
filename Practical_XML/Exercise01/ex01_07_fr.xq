@@ -14,16 +14,16 @@ let $main := doc('http://www.geohive.com/cntry/france.aspx')//x:div["wrapper"]
 let $countryname := $main//x:div["generalinfo"]/x:h1/text()
 let $capname := $main//x:div["generalinfo"]/x:div["infoblock1"]/x:table//x:td[text()="Capital"]/parent::node()/x:td[2]/text()
 let $totalpopulation := format-number(sum((
-    for $p in $main//x:div["adminunits"]//x:table[@summary="administrative units"]/x:tbody/x:tr[@class="level2"]
+    for $p in $main//x:div["adminunits"]//x:table[@summary="administrative units"]/x:tbody/x:tr[@class="level1"]
     let $pop := replace($p/x:td[last()]/text(),",","")
     return
         if (functx:is-a-number($pop))
         then number($pop)
         else number(0)
         (: I tried empty or normalize-space or zero-length string. none of them works. :)
-)), ",000")
+)), ",###")
 let $provlink := (
-    for $p in $main//x:div["adminunits"]//x:table[@summary="administrative units"]/x:tbody/x:tr[@class="level2"]
+    for $p in $main//x:div["adminunits"]//x:table[@summary="administrative units"]/x:tbody/x:tr[@class="level1"]
     let $link := $p/x:td[1]/x:a
     where $link != ""
     return $link/@href/string(.)
@@ -37,35 +37,42 @@ let $citytable := $citydiv//x:table[@summary="cities"]
 
 return
 element country {
-    attribute capital { $capname },
+    attribute capital { concat(replace($countryname," ",""), "-", replace($capname," ","")) },
     element name { $countryname },
     element population { $totalpopulation },
     element provinces {
-        for $province in $provtable/x:tbody/x:tr[@class="level2"]
+        for $province in $provtable/x:tbody/x:tr[@class="level1"]
         let $ccode := $province/x:td[@class="ccode"]/string(.)
         let $provcap := $province/x:td[3]/text()
         where $provcap != ""
         order by $ccode
         return
         element province {
-            attribute id { $ccode },
-            attribute capital { $provcap },
+            (: attribute id { $ccode }, :)
+            attribute capital { concat(replace($countryname," ",""), "-", replace(translate($provcap,"()","")," ","")) },
             element name { $province/x:td[2]/text() },
             element area { $province/x:td[4]/text() },
             element population { $province/x:td[last()]/text() }
         }
     },
     element cities {
-        for $city in $citytable/x:tbody/x:tr[@class="level1"]
+        for $city in ($citytable/x:tbody/x:tr[@class="level1"], $provtable/x:tbody/x:tr[not(x:td[3]/text()=$citytable/x:tbody/x:tr[@class="level1"]/x:td[1]/text())][@class="level1"])
         let $cityname := $city/x:td[1]/text()
+        let $cityid := concat(replace($countryname," ",""), "-", replace(translate($cityname,"()","")," ",""))
         return
+        if ($city/parent::node()/parent::node()/@summary="administrative units") then
         element city {
-            attribute id { $cityname }, (: I don't know what can be used as ID. complicated, we could use the provlink to get all the cities, but then we need to change the capital to ID instead of name :)
+            attribute id { concat(replace($countryname," ",""), "-", replace(translate($city/x:td[3]/text(),"()","")," ","")) },
+            element name { $city/x:td[3]/text() },
+            element population {}
+        }
+        else
+        element city {
+            attribute id { $cityid },
             element name { $cityname },
             element population { $city/x:td[last()]/text() }
         }
     }
 }
-
 
 
