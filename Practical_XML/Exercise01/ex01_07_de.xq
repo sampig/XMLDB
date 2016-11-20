@@ -8,6 +8,8 @@ let $main := doc('http://www.geohive.com/cntry/germany.aspx')//x:div["wrapper"]
 
 let $countryname := $main//x:div["generalinfo"]/x:h1/text()
 let $capname := $main//x:div["generalinfo"]/x:div["infoblock1"]/x:table//x:td[text()="Capital"]/parent::node()/x:td[2]/text()
+
+(: Calculate the total population instead of getting directly from the last row. :)
 let $totalpopulation := format-number(sum((
     for $p in $main//x:div["adminunits"]//x:table[@summary="administrative units"]/x:tbody/x:tr[@class="level2"]
     let $pop := $p/x:td[last()]/text()
@@ -15,7 +17,7 @@ let $totalpopulation := format-number(sum((
         if (empty($pop))
         then 0
         else number(replace($pop,",",""))
-)), ",###")
+)), "#")
 let $provlink := (
     for $p in $main//x:div["adminunits"]//x:table[@summary="administrative units"]/x:tbody/x:tr[@class="level2"]
     let $link := $p/x:td[1]/x:a
@@ -45,8 +47,8 @@ element country {
             (: attribute id { $ccode }, :)
             attribute capital { concat(replace($countryname," ",""), "-", replace($provcap," ","")) },
             element name { $province/x:td[2]/text() },
-            element area { $province/x:td[4]/text() },
-            element population { $province/x:td[last()]/text() }
+            element area { $province/x:td[4]/replace(text(),",","") },
+            element population { $province/x:td[last()]/replace(text(),",","") }
         }
     },
     element cities {
@@ -66,7 +68,7 @@ element country {
         element city {
             attribute id { $cityid },
             element name { $cityname },
-            element population { $city/x:td[last()]/text() }
+            element population { $city/x:td[last()]/replace(text(),",","") }
         }
     }
 }

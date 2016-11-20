@@ -21,7 +21,7 @@ let $totalpopulation := format-number(sum((
         then number($pop)
         else number(0)
         (: I tried empty or normalize-space or zero-length string. none of them works. :)
-)), ",###")
+)), "#")
 let $provlink := (
     for $p in $main//x:div["adminunits"]//x:table[@summary="administrative units"]/x:tbody/x:tr[@class="level1"]
     let $link := $p/x:td[1]/x:a
@@ -51,8 +51,8 @@ element country {
             (: attribute id { $ccode }, :)
             attribute capital { concat(replace($countryname," ",""), "-", replace(translate($provcap,"()","")," ","")) },
             element name { $province/x:td[2]/text() },
-            element area { $province/x:td[4]/text() },
-            element population { $province/x:td[last()]/text() }
+            element area { $province/x:td[4]/replace(text(),",","") },
+            element population { $province/x:td[last()]/replace(text(),",","") }
         }
     },
     element cities {
@@ -70,7 +70,7 @@ element country {
         element city {
             attribute id { $cityid },
             element name { $cityname },
-            element population { $city/x:td[last()]/text() }
+            element population { $city/x:td[last()]/replace(text(),",","") }
         }
     }
 }
