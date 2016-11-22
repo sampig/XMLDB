@@ -5,7 +5,7 @@ Author: [ZHU, Chenfeng](http://about.me/zhuchenfeng)
 
 ## Table of contents
 
-* [Solution](#solution)
+* [Solutions](#solutions)
 
 ## Solutions
 

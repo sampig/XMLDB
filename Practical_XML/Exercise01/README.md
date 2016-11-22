@@ -8,7 +8,7 @@ Author: [ZHU, Chenfeng](http://about.me/zhuchenfeng)
 * [Pre Work](#pre-work)
   * [Commands](#commands)
   * [Web Tool](#web-tool)
-* [Solution](#solution)
+* [Solutions](#solutions)
 
 ## Pre Work
 
