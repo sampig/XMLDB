@@ -29,6 +29,14 @@ saxonXSL /afs/informatik.uni-goettingen.de/course/xml-lecture/Mondial/mondial.xm
 
 ```
 
+### Exercise 2.2 (Generation of static Web Pages)
+
+``` shell
+saxonXSL /afs/informatik.uni-goettingen.de/course/xml-lecture/Mondial/mondial-europe.xml ex02_02.xsl
+tree ~/public_html/xml/ex02/
+```
+
+[Link](http://user.informatik.uni-goettingen.de/~chenfeng.zhu/xml/ex02/)
 
 
 
