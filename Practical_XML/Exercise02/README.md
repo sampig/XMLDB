@@ -33,11 +33,22 @@ saxonXSL /afs/informatik.uni-goettingen.de/course/xml-lecture/Mondial/mondial.xm
 
 ``` shell
 saxonXSL /afs/informatik.uni-goettingen.de/course/xml-lecture/Mondial/mondial-europe.xml ex02_02.xsl
+
 tree ~/public_html/xml/ex02/
 ```
 
 [Link](http://user.informatik.uni-goettingen.de/~chenfeng.zhu/xml/ex02/)
 
+
+### Exercise 2.3 (Generation of dynamic Web Pages)
+
+``` shell
+saxonXSL /afs/informatik.uni-goettingen.de/course/xml-lecture/Mondial/mondial.xml ex02_03a.xsl
+more ~/public_html/xml/ex02/org/[name].xml
+
+cp ex02_03b.xsl ~/public_html/xml/ex02/org/
+saxonXSL -a ~/public_html/xml/ex02/org/[name].xml
+```
 
 
 
