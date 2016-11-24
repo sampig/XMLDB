@@ -1,7 +1,7 @@
-Practical XML: Exercise 01
+Practical XML: Exercise 02
 ==========================
 
-Author: [ZHU, Chenfeng](http://about.me/zhuchenfeng)
+Author: Ankita Bajpai, Azadeh Amiri, [Chenfeng ZHU](http://about.me/zhuchenfeng), Dorna Amiri, Michael Debono
 
 ## Table of contents
 

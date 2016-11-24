@@ -1,7 +1,7 @@
 Practical XML: Exercise 01
 ==========================
 
-Author: [ZHU, Chenfeng](http://about.me/zhuchenfeng)
+Author: Ankita Bajpai, [Chenfeng ZHU](http://about.me/zhuchenfeng)
 
 ## Table of contents
 
