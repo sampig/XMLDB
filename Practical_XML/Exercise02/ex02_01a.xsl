@@ -3,7 +3,7 @@
 
 <xsl:template match="mondial">
 <waters>
-<xsl:apply-templates select="sea[name='North Sea']"/>
+<xsl:apply-templates select="sea"/>
 </waters>
 </xsl:template>
 
@@ -17,6 +17,20 @@
 </sea>
 </xsl:template>
 
+<xsl:template match="river|lake">
+<xsl:copy>
+    <name><xsl:value-of select="name"/></name>
+    <xsl:if test="length">
+    <length><xsl:value-of select="length"/></length>
+    </xsl:if>
+    <xsl:apply-templates select="idref(@id)/parent::to/parent::node()">
+        <xsl:with-param name="pid" select="string(@id)"/>
+        <xsl:sort select=".//estuary//elevation" data-type="number" order="descending"/>
+    </xsl:apply-templates>
+</xsl:copy>
+</xsl:template>
+
+<!--
 <xsl:template match="river">
 <xsl:param name="pid"/>
 <river>
@@ -43,6 +57,7 @@
     </xsl:apply-templates>
 </lake>
 </xsl:template>
+-->
 
 </xsl:stylesheet>
 

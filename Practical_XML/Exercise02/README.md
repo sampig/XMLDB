@@ -14,7 +14,8 @@ Author: [ZHU, Chenfeng](http://about.me/zhuchenfeng)
 ``` shell
 # a
 saxonXSL /afs/informatik.uni-goettingen.de/course/xml-lecture/Mondial/mondial.xml ex02_01a.xsl
-saxonXSL /afs/informatik.uni-goettingen.de/course/xml-lecture/Mondial/mondial.xml ex02_01a.xsl > 02_01a.xml
+saxonXSL /afs/informatik.uni-goettingen.de/course/xml-lecture/Mondial/mondial.xml ex02_01a.xsl > ~/public_html/xml/ex02/02_01a.xml
+saxonXQ -s:/afs/informatik.uni-goettingen.de/user/c/chenfeng.zhu/public_html/xml/ex02/02_01a.xml -qs:"//sea[name='North Sea']"
 
 # b
 saxonXSL ./02_01a.xml ex02_01b.xsl
@@ -26,7 +27,8 @@ saxonXSL /afs/informatik.uni-goettingen.de/course/xml-lecture/Mondial/mondial.xm
 
 # d
 saxonXSL /afs/informatik.uni-goettingen.de/course/xml-lecture/Mondial/mondial.xml ex02_01d.xsl > ~/public_html/xml/02_01d.xml
-
+saxonXQ -s:/afs/informatik.uni-goettingen.de/user/c/chenfeng.zhu/public_html/xml/ex02/02_01d.xml -qs:"//sea[name='Mediterranean Sea']//river[source/latitude<0]"
+saxonXQ -s:/afs/informatik.uni-goettingen.de/user/c/chenfeng.zhu/public_html/xml/ex02/02_01d.xml -qs:"//sea[name='Black Sea']//*[self::river or self::lake]/name/string(@country)"
 ```
 
 ### Exercise 2.2 (Generation of static Web Pages)
