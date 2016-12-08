@@ -12,7 +12,7 @@
     <name><xsl:value-of select="name"/></name>
     <xsl:apply-templates select="idref(@id)/parent::to/parent::node()">
         <xsl:with-param name="pid" select="string(@id)"/>
-        <xsl:sort select=".//estuary//elevation" data-type="number" order="descending"/>
+        <xsl:sort select=".//estuary//elevation" data-type="number" order="descending"/> <!-- unnecessary. it must be zero for the river to sea. -->
     </xsl:apply-templates> 
 </sea>
 </xsl:template>
@@ -25,7 +25,7 @@
     </xsl:if>
     <xsl:apply-templates select="idref(@id)/parent::to/parent::node()">
         <xsl:with-param name="pid" select="string(@id)"/>
-        <xsl:sort select=".//estuary//elevation" data-type="number" order="descending"/>
+        <xsl:sort select=".//estuary//elevation|elevation" data-type="number" order="descending"/>
     </xsl:apply-templates>
 </xsl:copy>
 </xsl:template>
