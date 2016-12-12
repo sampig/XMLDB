@@ -6,13 +6,16 @@ Author: [ZHU, Chenfeng](http://about.me/zhuchenfeng)
 ## Table of contents
 
 * [Solutions](#solutions)
+    * [Exercise DOM](#exercise-dom)
 
 ## Solutions
+
+### Exercise DOM
 
 ``` shell
 javac -cp /afs/informatik.uni-goettingen.de/user/c/chenfeng.zhu/public_html/xml/lib/jdom-1.1.3.jar:. org/zhuzhu/dom/MyJDOM.java
 
-java -cp /afs/informatik.uni-goettingen.de/user/c/chenfeng.zhu/public_html/xml/lib/jdom-1.1.3.jar:. org.zhuzhu.dom.MyJDOM
+java -cp /afs/informatik.uni-goettingen.de/user/c/chenfeng.zhu/public_html/xml/lib/jdom-1.1.3.jar:/afs/informatik.uni-goettingen.de/user/c/chenfeng.zhu/public_html/xml/lib/jaxen-1.1.1.jar:. org.zhuzhu.dom.MyJDOM
 
 javac org/zhuzhu/dom/MyW3CDOM.java
 
