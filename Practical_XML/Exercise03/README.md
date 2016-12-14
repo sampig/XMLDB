@@ -29,7 +29,7 @@ saxonXQ -s:/afs/informatik.uni-goettingen.de/course/xml-lecture/Mondial/mondial.
 ``` shell
 javac org/zhuzhu/dom/MySAX.java
 
-java org.zhuzhu.dom.MySAX [path_of_mondial] [path_of_output1] [path_of_output2] [path_of_output3]
+java org.zhuzhu.dom.MySAX [path_of_mondial] [path_of_output1] [path_of_output2] [path_of_output3] [path_of_output4]
 ```
 
 
