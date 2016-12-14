@@ -15,17 +15,32 @@ import org.xml.sax.SAXException;
 
 public class MySAX {
 
-    private static String MONDIAL_FILEPATH = "/usr/workspace/xml/mondial.xml";
-    private static String OUTPUT_FILEPATH = "/usr/workspace/xml/ex03_03a.html";
+    private static String MONDIAL_FILEPATH = "/afs/informatik.uni-goettingen.de/course/xml-lecture/Mondial/mondial.xml";
+    private static String OUTPUT_FILEPATH = "/afs/informatik.uni-goettingen.de/user/c/chenfeng.zhu/public_html/xml/ex03/ex03_03a.html";
+    private static String OUTPUT_FILEPATH2 = "/afs/informatik.uni-goettingen.de/user/c/chenfeng.zhu/public_html/xml/ex03/ex03_03c.html";
+    private static String OUTPUT_FILEPATH3 = "/afs/informatik.uni-goettingen.de/user/c/chenfeng.zhu/public_html/xml/ex03/ex03_03d.html";
+    private static String OUTPUT_FILEPATH4 = "/afs/informatik.uni-goettingen.de/user/c/chenfeng.zhu/public_html/xml/ex03/ex03_03e.html";
 
     public static void main(String... strings) {
         String sourcePath = null;
         String outputFile = null;
-        if (strings.length > 0) {
+        String outputFile2 = null;
+        String outputFile3 = null;
+        String outputFile4 = null;
+        if (strings.length >= 1) {
             sourcePath = strings[0];
         }
         if (strings.length >= 2) {
             outputFile = strings[1];
+        }
+        if (strings.length >= 3) {
+            outputFile2 = strings[2];
+        }
+        if (strings.length >= 4) {
+            outputFile3 = strings[3];
+        }
+        if (strings.length >= 5) {
+            outputFile4 = strings[4];
         }
 
         MySAX mySAX = new MySAX();
@@ -38,6 +53,21 @@ public class MySAX {
         System.out.println("================================");
         System.out.println("Exercise 03_3b");
         mySAX.exercise3_3b(sourcePath);
+        System.out.println("================================\n\n");
+
+        System.out.println("================================");
+        System.out.println("Exercise 03_3c");
+        mySAX.exercise3_3c(sourcePath, outputFile2);
+        System.out.println("================================\n\n");
+
+        System.out.println("================================");
+        System.out.println("Exercise 03_3d");
+        mySAX.exercise3_3d(sourcePath, outputFile3);
+        System.out.println("================================\n\n");
+
+        System.out.println("================================");
+        System.out.println("Exercise 03_3e");
+        mySAX.exercise3_3e(sourcePath, outputFile4);
         System.out.println("================================\n\n");
     }
 
@@ -85,6 +115,87 @@ public class MySAX {
         System.out.println("Source XML File: " + filepath);
         
         MySAXBHandler handler = new MySAXBHandler();
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        try {
+            SAXParser parser = factory.newSAXParser();
+            parser.parse(filepath, handler);
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void exercise3_3c(String source, String target) {
+        // source:
+        String filepath = MONDIAL_FILEPATH;
+        if (source != null && !("".equalsIgnoreCase(source))) {
+            filepath = source;
+        }
+        System.out.println("Source XML File: " + filepath);
+
+        // target:
+        if (target == null || "".equalsIgnoreCase(target)) {
+            target = OUTPUT_FILEPATH2;
+        }
+        
+        MySAXCHandler handler = new MySAXCHandler(target);
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        try {
+            SAXParser parser = factory.newSAXParser();
+            parser.parse(filepath, handler);
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void exercise3_3d(String source, String target) {
+        // source:
+        String filepath = MONDIAL_FILEPATH;
+        if (source != null && !("".equalsIgnoreCase(source))) {
+            filepath = source;
+        }
+        System.out.println("Source XML File: " + filepath);
+
+        // target:
+        if (target == null || "".equalsIgnoreCase(target)) {
+            target = OUTPUT_FILEPATH3;
+        }
+        
+        MySAXDHandler handler = new MySAXDHandler(target);
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        try {
+            SAXParser parser = factory.newSAXParser();
+            parser.parse(filepath, handler);
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void exercise3_3e(String source, String target) {
+        // source:
+        String filepath = MONDIAL_FILEPATH;
+        if (source != null && !("".equalsIgnoreCase(source))) {
+            filepath = source;
+        }
+        System.out.println("Source XML File: " + filepath);
+
+        // target:
+        if (target == null || "".equalsIgnoreCase(target)) {
+            target = OUTPUT_FILEPATH4;
+        }
+        
+        MySAXEHandler handler = new MySAXEHandler(target);
         SAXParserFactory factory = SAXParserFactory.newInstance();
         try {
             SAXParser parser = factory.newSAXParser();

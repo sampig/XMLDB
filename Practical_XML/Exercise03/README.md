@@ -24,4 +24,12 @@ java org.zhuzhu.dom.MyW3CDOM [path_of_mondial] [path_of_output]
 saxonXQ -s:/afs/informatik.uni-goettingen.de/course/xml-lecture/Mondial/mondial.xml -qs:"count(//organization[idref(@headq)/parent::country=id(members/@country)])"
 ```
 
+### Exercise SAX
+
+``` shell
+javac org/zhuzhu/dom/MySAX.java
+
+java org.zhuzhu.dom.MySAX [path_of_mondial] [path_of_output1] [path_of_output2] [path_of_output3]
+```
+
 
