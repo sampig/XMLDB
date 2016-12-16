@@ -31,7 +31,7 @@ public class MyStAXAEHandler {
     private FileInputStream inputStream;
     private OutputStream outputStream;
 
-    private List<Country> listCountries = new ArrayList<Country>(0);
+    private List<MyStAXCountry> listCountries = new ArrayList<MyStAXCountry>(0);
 
     public MyStAXAEHandler(FileInputStream input, OutputStream output) {
         this.inputStream = input;
@@ -60,11 +60,11 @@ public class MyStAXAEHandler {
             // new IndentingXMLStreamWriter(outputFactory.createXMLStreamWriter(outputStream));
             // writer.setIndentStep(" ");
 
-            listCountries = new ArrayList<Country>(0);
+            listCountries = new ArrayList<MyStAXCountry>(0);
             boolean isCountry = false;
             int posName = 0;
             int posPopulation = 0;
-            Country country = new Country();
+            MyStAXCountry country = new MyStAXCountry();
             String capID = null;
             String cityID = null;
             boolean isCapital = false;
@@ -87,7 +87,7 @@ public class MyStAXAEHandler {
                     System.out.println("End Document: " + listCountries.size());
                     writer.writeEndElement(); // ul
                     writer.writeEndElement(); // div
-                    listCountries = new ArrayList<Country>(0);
+                    listCountries = new ArrayList<MyStAXCountry>(0);
                     reader.close();
                     writer.flush();
                     writer.close();
@@ -97,7 +97,7 @@ public class MyStAXAEHandler {
                     if ("country".equals(localname)) {
                         isCountry = true;
                         if (country == null) {
-                            country = new Country();
+                            country = new MyStAXCountry();
                         }
                         capID = reader.getAttributeValue(null, "capital");
                     } else if (("city".equals(localname)) && isCountry) {
@@ -192,13 +192,13 @@ public class MyStAXAEHandler {
                         }
                         isCountry = false;
                         posName = 0;
-                        country = new Country();
+                        country = new MyStAXCountry();
                     } else if ("city".equals(localname)) {
                         country.getListCity().add(cityname);
                         if (population == null || ("".equalsIgnoreCase(population))) {
                             population = "0";
                         }
-                        country.listPopulation.add(Integer.parseInt(population));
+                        country.getListPopulation().add(Integer.parseInt(population));
                         isCity = false;
                         isCapital = false;
                         posPopulation = 0;
@@ -211,108 +211,6 @@ public class MyStAXAEHandler {
         } catch (XMLStreamException e) {
             e.printStackTrace();
         }
-    }
-
-    public class Country {
-        private String name;
-        private String capital;
-        private List<String> listCity = new ArrayList<String>(0);
-        private List<Integer> listPopulation = new ArrayList<Integer>(0);
-
-        public Country() {
-            super();
-            listCity = new ArrayList<String>(0);
-            listPopulation = new ArrayList<Integer>(0);
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getCapital() {
-            return capital;
-        }
-
-        public void setCapital(String capital) {
-            this.capital = capital;
-        }
-
-        public List<String> getListCity() {
-            return listCity;
-        }
-
-        public void setListCity(List<String> listCity) {
-            this.listCity = listCity;
-        }
-
-        public List<Integer> getListPopulation() {
-            return listPopulation;
-        }
-
-        public void setListPopulation(List<Integer> listPopulation) {
-            this.listPopulation = listPopulation;
-        }
-
-        public int getAllCitiesNumber() {
-            return listCity.size();
-        }
-
-        public int getPopulationSum() {
-            int sum = 0;
-            for (int p : listPopulation) {
-                sum += p;
-            }
-            return sum;
-        }
-
-        public int getPopulationAvg() {
-            return getPopulationSum() / getAllCitiesNumber();
-        }
-
-        public int getCapitalIndex() {
-            int index = 0;
-            for (int i = 0; i < listCity.size(); i++) {
-                String city = listCity.get(i);
-                if (city.equals(capital)) {
-                    index = i;
-                    break;
-                }
-            }
-            return index;
-        }
-
-        public int getCityClosestIndex() {
-            int index = 0;
-            int avg = getPopulationAvg();
-            int temp = Math.abs(listPopulation.get(0) - avg);
-            for (int i = 1; i < listPopulation.size(); i++) {
-                int diff = Math.abs(listPopulation.get(i) - avg);
-                if (diff < temp) {
-                    temp = diff;
-                    index = i;
-                }
-            }
-            return index;
-        }
-
-        public boolean withEnoughValid() {
-            boolean flag = false;
-            int count = 0;
-            for (int p : listPopulation) {
-                if (p > 0) {
-                    count++;
-                }
-            }
-            if (count >= 10) {
-                flag = true;
-            }
-            return flag;
-        }
-
     }
 
 }
