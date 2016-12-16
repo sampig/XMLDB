@@ -18,7 +18,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * Output the name and population for every city in each country (with at least 10 valid city population) within its table.
+ * Output the name and population for every city in each country (with at least 10 valid city population) within its
+ * table.
  * 
  * @author Chenfeng Zhu
  *
@@ -200,6 +201,8 @@ public class MySAXEHandler extends DefaultHandler {
             isCity = false;
             isCapital = false;
             posPopulation = 0;
+            city = null;
+            population = null;
         }
         if (isCountry && ("name".equalsIgnoreCase(elementName)) && posName == 0) {
             country = content;
