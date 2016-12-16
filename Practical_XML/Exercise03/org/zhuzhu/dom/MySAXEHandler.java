@@ -18,8 +18,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * Output the name and population for every city in each country (with at least 10 valid city population) within its
- * table.
+ * Output the name and population for every city in each country (with at least 10 valid city population) within its table.
  * 
  * @author Chenfeng Zhu
  *

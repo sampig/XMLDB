@@ -141,7 +141,7 @@ public class MySAXDHandler extends DefaultHandler {
             write("    <li><h2>" + country + "</h2>");
             write("<div><table border='1'>");
             write("    <tr><th>City</th><th>Population</th></tr>");
-            for (String str: list) {
+            for (String str : list) {
                 write(str);
             }
             write("</table></div>");

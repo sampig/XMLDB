@@ -13,6 +13,12 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.SAXException;
 
+/**
+ * Exercise - SAX.
+ * 
+ * @author Chenfeng Zhu
+ *
+ */
 public class MySAX {
 
     private static String MONDIAL_FILEPATH = "/afs/informatik.uni-goettingen.de/course/xml-lecture/Mondial/mondial.xml";
@@ -83,7 +89,7 @@ public class MySAX {
         if (target == null || "".equalsIgnoreCase(target)) {
             target = OUTPUT_FILEPATH;
         }
-        
+
         MySAXAHandler handler = new MySAXAHandler(target);
         SAXParserFactory factory = SAXParserFactory.newInstance();
         try {
@@ -105,7 +111,7 @@ public class MySAX {
             e.printStackTrace();
         }
     }
-    
+
     public void exercise3_3b(String source) {
         // source:
         String filepath = MONDIAL_FILEPATH;
@@ -113,7 +119,7 @@ public class MySAX {
             filepath = source;
         }
         System.out.println("Source XML File: " + filepath);
-        
+
         MySAXBHandler handler = new MySAXBHandler();
         SAXParserFactory factory = SAXParserFactory.newInstance();
         try {
@@ -127,7 +133,7 @@ public class MySAX {
             e.printStackTrace();
         }
     }
-    
+
     public void exercise3_3c(String source, String target) {
         // source:
         String filepath = MONDIAL_FILEPATH;
@@ -140,7 +146,7 @@ public class MySAX {
         if (target == null || "".equalsIgnoreCase(target)) {
             target = OUTPUT_FILEPATH2;
         }
-        
+
         MySAXCHandler handler = new MySAXCHandler(target);
         SAXParserFactory factory = SAXParserFactory.newInstance();
         try {
@@ -154,7 +160,7 @@ public class MySAX {
             e.printStackTrace();
         }
     }
-    
+
     public void exercise3_3d(String source, String target) {
         // source:
         String filepath = MONDIAL_FILEPATH;
@@ -167,7 +173,7 @@ public class MySAX {
         if (target == null || "".equalsIgnoreCase(target)) {
             target = OUTPUT_FILEPATH3;
         }
-        
+
         MySAXDHandler handler = new MySAXDHandler(target);
         SAXParserFactory factory = SAXParserFactory.newInstance();
         try {
@@ -181,7 +187,7 @@ public class MySAX {
             e.printStackTrace();
         }
     }
-    
+
     public void exercise3_3e(String source, String target) {
         // source:
         String filepath = MONDIAL_FILEPATH;
@@ -194,7 +200,7 @@ public class MySAX {
         if (target == null || "".equalsIgnoreCase(target)) {
             target = OUTPUT_FILEPATH4;
         }
-        
+
         MySAXEHandler handler = new MySAXEHandler(target);
         SAXParserFactory factory = SAXParserFactory.newInstance();
         try {
