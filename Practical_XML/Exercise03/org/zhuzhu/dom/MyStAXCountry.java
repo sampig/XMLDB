@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyStAXCountry {
+
+    private String carcode;
     private String name;
-    private String capital;
+    private String capitalName;
+    private String capitalID;
     private List<String> listCity = new ArrayList<String>(0);
     private List<Integer> listPopulation = new ArrayList<Integer>(0);
 
@@ -13,6 +16,14 @@ public class MyStAXCountry {
         super();
         listCity = new ArrayList<String>(0);
         listPopulation = new ArrayList<Integer>(0);
+    }
+
+    public String getCarcode() {
+        return carcode;
+    }
+
+    public void setCarcode(String carcode) {
+        this.carcode = carcode;
     }
 
     public String getName() {
@@ -23,12 +34,20 @@ public class MyStAXCountry {
         this.name = name;
     }
 
-    public String getCapital() {
-        return capital;
+    public String getCapitalName() {
+        return capitalName;
     }
 
-    public void setCapital(String capital) {
-        this.capital = capital;
+    public void setCapitalName(String capitalName) {
+        this.capitalName = capitalName;
+    }
+
+    public String getCapitalID() {
+        return capitalID;
+    }
+
+    public void setCapitalID(String capitalID) {
+        this.capitalID = capitalID;
     }
 
     public List<String> getListCity() {
@@ -67,7 +86,7 @@ public class MyStAXCountry {
         int index = 0;
         for (int i = 0; i < listCity.size(); i++) {
             String city = listCity.get(i);
-            if (city.equals(capital)) {
+            if (city.equals(capitalName)) {
                 index = i;
                 break;
             }
@@ -104,4 +123,3 @@ public class MyStAXCountry {
     }
 
 }
-

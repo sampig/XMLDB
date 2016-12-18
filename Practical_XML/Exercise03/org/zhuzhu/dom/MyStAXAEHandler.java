@@ -116,7 +116,7 @@ public class MyStAXAEHandler {
                     if (isCountry && isCity && ("name".equals(localname))) {
                         cityname = reader.getElementText();
                         if (isCapital) {
-                            country.setCapital(cityname);
+                            country.setCapitalName(cityname);
                         }
                     }
                     if (isCountry && isCity && ("population".equals(localname))) {
