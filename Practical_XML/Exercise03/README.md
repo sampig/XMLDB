@@ -23,7 +23,7 @@ javac org/zhuzhu/dom/MyW3CDOM.java
 
 java org.zhuzhu.dom.MyW3CDOM [path_of_mondial] [path_of_output]
 
-saxonXQ -s:/afs/informatik.uni-goettingen.de/course/xml-lecture/Mondial/mondial.xml -qs:"count(//organization[idref(@headq)/parent::country=id(members/@country)])"
+saxonXQ -s:/afs/informatik.uni-goettingen.de/course/xml-lecture/Mondial/mondial.xml -qs:"count(//organization[idref(@headq)/parent::country=id(members/@country)])" \!indent=yes
 ```
 
 ### Exercise SAX
@@ -128,8 +128,13 @@ Once a province or a city leaves a country.
     - Add new information for it.
     - Get the element of the province or the city. Change it to the country and add it under "mondial".
 2. Modify original Country.
-    -  Remove the province.
-3. 
+    - Change its area.
+    - Remove the province.
+3. Modify other Element.
+    - Change the nature.
+    - Change the organization.
+    - Change the airport.
+
 
 
 ``` shell
@@ -143,11 +148,22 @@ java -cp /afs/informatik.uni-goettingen.de/user/c/chenfeng.zhu/public_html/xml/l
 Check the results:
 
 ``` shell
-saxonXQ -s:/usr/workspace/xml/mondial_new.xml -qs:"//country[@car_code='CAL']"
-saxonXQ -s:/usr/workspace/xml/mondial_new.xml -qs:"//node()[name='California']/name"
-saxonXQ -s:/usr/workspace/xml/mondial_new.xml -qs:"//idref('prov-United-States-6')/parent::node()[name()!='city']"
-saxonXQ -s:/usr/workspace/xml/mondial_new.xml -qs:"//node()[@country='CAL']/parent::node()[name()!='city']"
-saxonXQ -s:/usr/workspace/xml/mondial_new.xml -qs:"//node()[@country='CAL']/parent::node()[name()!='city']"
-saxonXQ -s:/usr/workspace/xml/mondial_new.xml -qs:"//organization[@id='org-G-10']"
+xmllint -loaddtd -valid -noout mondial_new.xml
+
+saxonXQ -s:./mondial_new.xml -qs:"//country[@car_code='CAL']" \!indent=yes
+saxonXQ -s:./mondial_new.xml -qs:"//node()[name='California']/name" \!indent=yes
+saxonXQ -s:./mondial_new.xml -qs:"//idref('prov-United-States-6')/parent::node()[name()!='city']" \!indent=yes
+saxonXQ -s:./mondial_new.xml -qs:"//idref('prov-California-6')/parent::node()[name()!='city']" \!indent=yes
+saxonXQ -s:./mondial_new.xml -qs:"//node()[@country='CAL']/parent::node()[name()!='city']" \!indent=yes
+saxonXQ -s:./mondial_new.xml -qs:"//node()[@country='CAL']/parent::node()[name()!='city']" \!indent=yes
+saxonXQ -s:./mondial_new.xml -qs:"//organization[@id='org-G-10']" \!indent=yes
+saxonXQ -s:./mondial_new.xml -qs:"//organization[@id='org-G-5']" \!indent=yes
+saxonXQ -s:./mondial_new.xml -qs:"//organization[@id='org-G-7']" \!indent=yes
 ```
+
+>>> The "Cursor API" using XMLStreamReader and XMLStreamWriter;
+>>> The "Iterator API" using XMLEventReader andXMLEventWriter;
+
+>>> Outputting an empty element with a single tag, <example/>, is not possible with the Iterator API using XMLEventWriter.
+
 

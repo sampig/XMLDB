@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2016, Chenfeng Zhu. All rights reserved.
+ * 
+ */
 package org.zhuzhu.xml.calexit;
 
 import java.io.File;
@@ -27,6 +31,13 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
+/**
+ * Practical XML Exercise 03.<br/>
+ * Calexit with JDOM-1.1.3.
+ * 
+ * @author Chenfeng Zhu
+ *
+ */
 public class CalexitJDOM {
 
     public enum SearchBy {
@@ -38,9 +49,9 @@ public class CalexitJDOM {
     }
 
     private String dtdPath = "/usr/workspace/xml/mondial.dtd";
-    private String sourcePath = "/usr/workspace/xml/mondial.xml";
-    private String ouptutPath = "/usr/workspace/xml/mondial_new.xml";
-    private String newinfoPath = "/usr/workspace/xml/calexit_new.xml";
+    private String sourcePath = "/afs/informatik.uni-goettingen.de/user/c/chenfeng.zhu/public_html/xml/lib/mondial.xml";
+    private String ouptutPath = "/afs/informatik.uni-goettingen.de/user/c/chenfeng.zhu/public_html/xml/ex03/mondial_new_jdom.xml";
+    private String newinfoPath = "/afs/informatik.uni-goettingen.de/user/c/chenfeng.zhu/public_html/xml/ex03/calexit_new.xml";
 
     private final static String CALIF_ID = "prov-United-States-6";
 
@@ -52,6 +63,7 @@ public class CalexitJDOM {
     private Document newDocument;
     private Element newRootElement;
     private Element newCountryElement;
+    private String carcodeNew;
 
     private List<String> listTopElementName = new ArrayList<String>(0);
 
@@ -74,7 +86,7 @@ public class CalexitJDOM {
         cjdom.loadTopElementNames();
         cjdom.change(SearchElement.province, SearchBy.id, null);
         // cjdom.change(SearchElement.province, SearchBy.name, "California");
-        // cjdom.specifyCalifornia();
+        cjdom.specifyCalifornia();
         cjdom.writeToFile();
         cjdom.validate();
     }
@@ -174,7 +186,7 @@ public class CalexitJDOM {
             String idOld = e.getAttributeValue("id");
             List<String> listCityidOld = new ArrayList<String>(0);
             String carcodeOld = e.getParentElement().getAttributeValue("car_code");
-            String carcodeNew = newinforElement.getChild("country").getAttributeValue("car_code");
+            carcodeNew = newinforElement.getChild("country").getAttributeValue("car_code");
             String countryname = e.getParentElement().getChildText("name").replace(" ", "-");
             String countrynameNew = e.getChildText("name").replace(" ", "-");
 
@@ -184,15 +196,11 @@ public class CalexitJDOM {
             // Change its attributes and children.
             newCountryElement.setName("country");
             newCountryElement.setAttribute("car_code", carcodeNew);
-            newCountryElement.setAttribute("area", newCountryElement.getChildText("area"));
+            String areaNew = newCountryElement.getChildText("area");
+            newCountryElement.setAttribute("area", areaNew);
             String capitalNew = newCountryElement.getAttributeValue("capital").replace(countryname, countrynameNew);
             newCountryElement.setAttribute("capital", capitalNew);
             String memberships = e.getParentElement().getAttributeValue("memberships");
-            if (true) {
-                memberships = memberships.replace("org-G-5", "");
-                memberships = memberships.replace("org-G-7", "");
-                memberships = memberships.replace("  ", " ").trim();
-            }
             newCountryElement.setAttribute("memberships", memberships);
             newCountryElement.removeAttribute("id");
             newCountryElement.removeAttribute("country");
@@ -222,6 +230,9 @@ public class CalexitJDOM {
             int posContinent = newRootElement.indexOf(newRootElement.getChild("continent"));
             newRootElement.addContent(posContinent, newCountryElement);
 
+            // Change its area.
+            int countryArea = Integer.parseInt(e.getParentElement().getAttributeValue("area")) - Integer.parseInt(areaNew);
+            e.getParentElement().setAttribute("area", String.valueOf(countryArea));
             // Remove the province.
             e.getParent().removeContent(e);
 
@@ -239,12 +250,19 @@ public class CalexitJDOM {
                     if (province.equals(idOld)) { // if it is only located in this province,
                         located.setAttribute("country", carcodeNew); // located.getAttributeValue("country") + " " +
                         located.removeAttribute("province");
+                        if (!listTopElementName.contains(located.getParentElement().getName())) { // if it is source or estuary
+                            Element p = located.getParentElement();
+                            String attr = p.getAttributeValue("country");
+                            if (attr != null && carcodeOld.equals(attr)) {
+                                p.setAttribute("country", carcodeNew);
+                            }
+                        }
                     } else {
                         located.setAttribute("province", province.replace(idOld, "").replace("  ", " ").trim());
                         Element p = located.getParentElement();
                         Element n = new Element("located");
                         n.setAttribute("country", carcodeNew);
-                        p.addContent(p.indexOf(located), n);
+                        p.addContent(p.indexOf(located) + 1, n);
                     }
                     // System.out.println(located);
                 }
@@ -267,6 +285,7 @@ public class CalexitJDOM {
             XPath xpathOrg = XPath.newInstance(strOrg);
             @SuppressWarnings("unchecked")
             List<Element> listOrg = (List<Element>) xpathOrg.selectNodes(newRootElement);
+            // List<String> listMemberships = Arrays.asList(memberships.split(" "));
             for (Element org : listOrg) {
                 @SuppressWarnings("unchecked")
                 List<Element> listMembers = (List<Element>) org.getChildren("members");
@@ -275,6 +294,7 @@ public class CalexitJDOM {
                     if (c == null) {
                         continue;
                     }
+                    // if (listMemberships.contains(members.getAttributeValue("id"))) {
                     if (c.startsWith(carcodeOld + " ") || c.endsWith(" " + carcodeOld) || c.equalsIgnoreCase(carcodeOld)
                             || c.contains(" " + carcodeOld + " ")) {
                         members.setAttribute("country", c + " " + carcodeNew);
@@ -305,6 +325,34 @@ public class CalexitJDOM {
         listOrgException.add("org-G-5");
         listOrgException.add("org-G-7");
 
+        String memberships = newCountryElement.getAttributeValue("memberships");
+        if (true) {
+            for (String str : listOrgException) {
+                memberships = memberships.replace(str, "");
+            }
+            memberships = memberships.replace("  ", " ").trim();
+        }
+        newCountryElement.setAttribute("memberships", memberships);
+
+        for (String str : listOrgException) {
+            str = "//organization[@id='" + str + "']";
+            try {
+                XPath xpath = XPath.newInstance(str);
+                Element org = (Element) xpath.selectSingleNode(newDocument);
+                @SuppressWarnings("unchecked")
+                List<Element> listMembers = (List<Element>) org.getChildren("members");
+                for (Element members : listMembers) {
+                    String c = members.getAttributeValue("country");
+                    if (c == null) {
+                        continue;
+                    }
+                    c = c.replace(carcodeNew, "").replace("  ", " ").trim();
+                    members.setAttribute("country", c);
+                }
+            } catch (JDOMException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void writeToFile() {
@@ -323,6 +371,7 @@ public class CalexitJDOM {
     }
 
     public void validate() {
+        System.out.println("\n\nValidation result: ");
         SAXBuilder builder = new SAXBuilder(true);
         try {
             Document d = builder.build(ouptutPath);
