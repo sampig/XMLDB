@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<newinfo>
+    <country car_code="CAL">
+        <population_growth>1.0</population_growth>
+        <infant_mortality>4.5</infant_mortality>
+        <gdp_total>1810000</gdp_total>
+        <gdp_agri>2</gdp_agri>
+        <gdp_ind>23</gdp_ind>
+        <gdp_serv>75</gdp_serv>
+        <inflation>1.8</inflation>
+        <unemployment>5.5</unemployment>
+        <encompassed continent="america" percentage="100"/>
+        <ethnicgroup percentage="72.9">European</ethnicgroup>
+        <ethnicgroup percentage="6.5">African</ethnicgroup>
+        <ethnicgroup percentage="14.7">Asian</ethnicgroup>
+        <ethnicgroup percentage="1.7">Amerindian</ethnicgroup>
+        <religion percentage="32">Protestant</religion>
+        <religion percentage="28">Roman Catholic</religion>
+        <religion percentage="2">Jewish</religion>
+        <religion percentage="2">Buddhist</religion>
+        <religion percentage="1">Mormon</religion>
+        <religion percentage="1">Muslim</religion>
+        <language percentage="60.5">English</language>
+        <language percentage="25.8">Spanish</language>
+        <language percentage="2.6">Chinese</language>
+        <border country="MEX" length="226"/>
+        <border country="USA" length="1681"/>
+    </country>
+</newinfo>
