@@ -2,7 +2,7 @@
  * Copyright (c) 2016, Chenfeng Zhu. All rights reserved.
  * 
  */
-package org.zhuzhu.dom;
+package org.zhuzhu.xml.dom;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -217,9 +217,26 @@ public class MyJDOM {
 
             targetDoc.getRootElement().addContent(theadElement);
 
+            // calulate max
+            String strMax = "//city/population[last()]";
+            // number nodetype is NOT supported.
+            // "//city[not(//city/population[last()]/number() > population[last()]/number()) and population[last()]]/population[last()]";
+            // max is from XPath 2.0 which is NOT supported.
+            // "max(//city/population[last()])";
+            XPath xpathMax = XPath.newInstance(strMax);
+            @SuppressWarnings("unchecked")
+            List<Element> populationList = (List<Element>) xpathMax.selectNodes(sourceElement);
+            int max = 0;
+            for (Element pe : populationList) {
+                int p = Integer.parseInt(pe.getText());
+                if (p > max) {
+                    max = p;
+                }
+            }
+
             // steps of 100,000
             int step = 100000;
-            int stepNum = 223;
+            int stepNum = max / step;
             XPath xpathCount;
             for (int i = 0; i <= stepNum; i++) {
                 int start = i * step;

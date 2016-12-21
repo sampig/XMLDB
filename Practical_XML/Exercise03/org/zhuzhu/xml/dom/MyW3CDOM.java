@@ -2,7 +2,7 @@
  * Copyright (c) 2016, Chenfeng Zhu. All rights reserved.
  * 
  */
-package org.zhuzhu.dom;
+package org.zhuzhu.xml.dom;
 
 import java.io.File;
 
@@ -177,7 +177,6 @@ public class MyW3CDOM {
             Document targetDoc = docBuilder.newDocument();
             // System.out.println(targetDoc);
 
-            System.out.println("----------------------------\n\n");
             XPath xPath = XPathFactory.newInstance().newXPath();
 
             Element rootElement = targetDoc.createElement("table");
@@ -202,9 +201,28 @@ public class MyW3CDOM {
             theadElement.appendChild(listElement);
             rootElement.appendChild(theadElement);
 
+            // calulate max
+            String strMax = "//city/population[last()]";
+            // number nodetype is NOT supported.
+            // "//city[not(//city/population[last()]/number() > population[last()]/number()) and population[last()]]/population[last()]";
+            // max is from XPath 2.0 which is NOT supported.
+            // "max(//city/population[last()])";
+            NodeList populationList = (NodeList) xPath.evaluate(strMax, sourceRoot, XPathConstants.NODESET);
+            int max = 0;
+            for (int i = 0; i < populationList.getLength(); i++) {
+                Node n = populationList.item(i);
+                if (n.getNodeType() == Node.ELEMENT_NODE) {
+                    Element e = (Element) n;
+                    int p = Integer.parseInt(e.getTextContent());
+                    if (p > max) {
+                        max = p;
+                    }
+                }
+            }
+
             // steps of 100,000
             int step = 100000;
-            int stepNum = 223;
+            int stepNum = max / step;
             for (int i = 0; i <= stepNum; i++) {
                 int start = i * step;
                 int end = (i + 1) * step;

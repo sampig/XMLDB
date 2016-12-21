@@ -15,15 +15,16 @@ Author: [ZHU, Chenfeng](http://about.me/zhuchenfeng)
 ### Exercise DOM
 
 ``` shell
-javac -cp /afs/informatik.uni-goettingen.de/user/c/chenfeng.zhu/public_html/xml/lib/jdom-1.1.3.jar:. org/zhuzhu/dom/MyJDOM.java
+# JDOM
+javac -cp [path_of_jdom-1.1.3.jar]:. org/zhuzhu/xml/dom/MyJDOM.java
+java -cp [path_of_jdom-1.1.3.jar]:[path_of_jaxen-1.1.1.jar]:. org.zhuzhu.xml.dom.MyJDOM [path_of_mondial] [path_of_output]
 
-java -cp /afs/informatik.uni-goettingen.de/user/c/chenfeng.zhu/public_html/xml/lib/jdom-1.1.3.jar:/afs/informatik.uni-goettingen.de/user/c/chenfeng.zhu/public_html/xml/lib/jaxen-1.1.1.jar:. org.zhuzhu.dom.MyJDOM [path_of_mondial] [path_of_output]
+# W3C DOM
+javac org/zhuzhu/xml/dom/MyW3CDOM.java
+java org.zhuzhu.xml.dom.MyW3CDOM [path_of_mondial] [path_of_output]
 
-javac org/zhuzhu/dom/MyW3CDOM.java
-
-java org.zhuzhu.dom.MyW3CDOM [path_of_mondial] [path_of_output]
-
-saxonXQ -s:/afs/informatik.uni-goettingen.de/course/xml-lecture/Mondial/mondial.xml -qs:"count(//organization[idref(@headq)/parent::country=id(members/@country)])" \!indent=yes
+# Check via XPath
+saxonXQ -s:./mondial.xml -qs:"count(//organization[idref(@headq)/parent::country=id(members/@country)])" \!indent=yes
 ```
 
 ### Exercise SAX
@@ -138,9 +139,9 @@ Once a province or a city leaves a country.
 
 
 ``` shell
-javac -cp /afs/informatik.uni-goettingen.de/user/c/chenfeng.zhu/public_html/xml/lib/jdom-1.1.3.jar:/afs/informatik.uni-goettingen.de/user/c/chenfeng.zhu/public_html/xml/lib/jaxen-1.1.1.jar:. org/zhuzhu/xml/calexit/CalexitJDOM.java
+javac -cp [path_of_jdom-1.1.3.jar]:[path_of_jaxen-1.1.1.jar]:. org/zhuzhu/xml/calexit/CalexitJDOM.java
 
-java -cp /afs/informatik.uni-goettingen.de/user/c/chenfeng.zhu/public_html/xml/lib/jdom-1.1.3.jar:/afs/informatik.uni-goettingen.de/user/c/chenfeng.zhu/public_html/xml/lib/jaxen-1.1.1.jar:. org.zhuzhu.xml.calexit.CalexitJDOM [path_of_mondial] [path_of_output1] [path_of_new_info]
+java -cp [path_of_jdom-1.1.3.jar]:[path_of_jaxen-1.1.1.jar]:. org.zhuzhu.xml.calexit.CalexitJDOM [path_of_mondial] [path_of_output1] [path_of_new_info]
 
 
 ```
