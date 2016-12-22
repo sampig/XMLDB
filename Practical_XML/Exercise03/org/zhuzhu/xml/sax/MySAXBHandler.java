@@ -1,4 +1,8 @@
-package org.zhuzhu.dom;
+/*
+ * Copyright (c) 2016, Chenfeng Zhu. All rights reserved.
+ * 
+ */
+package org.zhuzhu.xml.sax;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;

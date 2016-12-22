@@ -2,7 +2,7 @@
  * Copyright (c) 2016, Chenfeng Zhu. All rights reserved.
  * 
  */
-package org.zhuzhu.dom;
+package org.zhuzhu.xml.sax;
 
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -2,7 +2,7 @@
  * Copyright (c) 2016, Chenfeng Zhu. All rights reserved.
  * 
  */
-package org.zhuzhu.dom;
+package org.zhuzhu.xml.sax;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,12 +18,12 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * Output the name and population for every city in each country within its table.
+ * Output the name and population for every city in each country (with at least 10 valid city population) within its table.
  * 
  * @author Chenfeng Zhu
  *
  */
-public class MySAXDHandler extends DefaultHandler {
+public class MySAXEHandler extends DefaultHandler {
 
     private int count = 0;
     private String content;
@@ -37,7 +37,9 @@ public class MySAXDHandler extends DefaultHandler {
     private String country;
     private String city;
     private String population;
-    private List<String> list = new ArrayList<String>(0);
+    private List<String> listCity = new ArrayList<String>(0);
+    private List<Integer> listPopulation = new ArrayList<Integer>(0);
+    private int countPopulation = 0;
 
     private OutputStreamWriter writer;
     private OutputStreamWriter printer;
@@ -45,7 +47,7 @@ public class MySAXDHandler extends DefaultHandler {
     private String lineEnd = System.getProperty("line.separator");
     private boolean useNew = true;
 
-    public MySAXDHandler(String output) {
+    public MySAXEHandler(String output) {
         super();
         System.out.println("Output HTML file: " + output);
         this.initOutput(output);
@@ -138,28 +140,68 @@ public class MySAXDHandler extends DefaultHandler {
             elementName = qName;
         }
         if ("country".equals(elementName)) {
-            write("    <li><h2>" + country + "</h2>");
-            write("<div><table border='1'>");
-            write("    <tr><th>City</th><th>Population</th></tr>");
-            for (String str : list) {
-                write(str);
+            if (countPopulation >= 10) {
+                write("    <li><h2>" + country + "</h2>");
+                write("    <p>City number: " + listCity.size() + "</p>");
+                int sum = 0;
+                for (int i : listPopulation) {
+                    sum += i;
+                }
+                int avg = sum / listPopulation.size();
+                write("    <p>Average city population: " + avg + "</p>");
+                int pos = 0;
+                int temp = Math.abs(listPopulation.get(0) - avg);
+                for (int i = 1; i < listPopulation.size(); i++) {
+                    int diff = Math.abs(listPopulation.get(i) - avg);
+                    if (diff < temp) {
+                        temp = diff;
+                        pos = i;
+                    }
+                }
+                write("    <div><table border='1'>");
+                write("        <tr><th>City</th><th>Population</th></tr>");
+                if (listCity.size() != listPopulation.size()) {
+                    System.out.println(listCity);
+                    System.out.println(listPopulation);
+                    print(listCity.size() + ",");
+                    print(listPopulation.size() + ",");
+                }
+                for (int i = 0; i < listPopulation.size(); i++) {
+                    String c = listCity.get(i);
+                    int p = listPopulation.get(i);
+                    if (i == pos) {
+                        write("        <tr><td>" + c + "</td><td><font color='blue'>" + p + "~</font></td></tr>");
+                    } else {
+                        write("        <tr><td>" + c + "</td><td>" + p + "</td></tr>");
+                    }
+                }
+                write("    </table></div>");
+                write("    </li>");
             }
-            write("</table></div>");
-            write("</li>");
             isCountry = false;
             isCity = false;
             isCapital = false;
-            list = new ArrayList<String>(0);
+            listCity = new ArrayList<String>(0);
+            listPopulation = new ArrayList<Integer>(0);
             country = null;
             city = null;
             population = null;
             posName = 0;
             posPopulation = 0;
+            countPopulation = 0;
         } else if ("city".equalsIgnoreCase(elementName)) {
-            list.add("    <tr><td>" + city + "</td><td>" + population + "</td></tr>");
+            listCity.add(city);
+            if (population != null && !("".equalsIgnoreCase(population))) {
+                countPopulation++;
+            } else {
+                population = "0";
+            }
+            listPopulation.add(Integer.parseInt(population));
             isCity = false;
             isCapital = false;
             posPopulation = 0;
+            city = null;
+            population = null;
         }
         if (isCountry && ("name".equalsIgnoreCase(elementName)) && posName == 0) {
             country = content;
@@ -168,7 +210,7 @@ public class MySAXDHandler extends DefaultHandler {
         if (isCountry && isCity && ("name".equalsIgnoreCase(elementName))) {
             city = content;
             if (isCapital) {
-                city += "*";
+                city = "<font color='red'>" + city + "*</font>";
             }
         }
         if (isCountry && isCity && ("population".equalsIgnoreCase(elementName))) {
