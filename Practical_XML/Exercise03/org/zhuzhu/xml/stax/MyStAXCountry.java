@@ -1,8 +1,18 @@
-package org.zhuzhu.dom;
+/*
+ * Copyright (c) 2016, Chenfeng Zhu. All rights reserved.
+ * 
+ */
+package org.zhuzhu.xml.stax;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Data structure for country.
+ * 
+ * @author Chenfeng Zhu
+ *
+ */
 public class MyStAXCountry {
 
     private String carcode;
