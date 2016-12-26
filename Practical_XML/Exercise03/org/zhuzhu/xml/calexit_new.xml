@@ -9,7 +9,6 @@
         <gdp_serv>75</gdp_serv>
         <inflation>1.8</inflation>
         <unemployment>5.5</unemployment>
-        <encompassed continent="america" percentage="100"/>
         <ethnicgroup percentage="72.9">European</ethnicgroup>
         <ethnicgroup percentage="6.5">African</ethnicgroup>
         <ethnicgroup percentage="14.7">Asian</ethnicgroup>
