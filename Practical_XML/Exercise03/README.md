@@ -9,6 +9,7 @@ Author: [ZHU, Chenfeng](http://about.me/zhuchenfeng)
     * [Exercise DOM](#exercise-dom)
     * [Exercise SAX](#exercise-sax)
     * [Exercise StAX](#exercise-stax)
+* [Hints](#hints)
 
 ## Solutions
 
@@ -44,6 +45,8 @@ java org.zhuzhu.xml.stax.MyStAX [path_of_mondial] [path_of_output1] [path_of_out
 ```
 
 ### Exercise Calexit
+
+#### Common
 
 All the main elements:
 
@@ -148,6 +151,7 @@ Once a province or a city leaves a country.
         - Change the country attribute with new carcode.
 
 
+#### via JDOM
 
 ``` shell
 javac -cp [path_of_jdom-1.1.3.jar]:[path_of_jaxen-1.1.1.jar]:. org/zhuzhu/xml/calexit/CalexitJDOM.java
@@ -187,6 +191,7 @@ saxonXQ -s:./mondial_new.xml -qs:"//organization[@id='org-G-7']" \!indent=yes
 # check nature elements:
 saxonXQ -s:./mondial_new.xml -qs:"//sea[@id='sea-Pacific']" \!indent=yes
 saxonXQ -s:./mondial_new.xml -qs:"//river[@id='river-Colorado_River']" \!indent=yes
+saxonXQ -s:./mondial_new.xml -qs:"//river[@id='river-TruckeeRiver']" \!indent=yes
 saxonXQ -s:./mondial_new.xml -qs:"//river[@id='river-AmargosaRiver']" \!indent=yes
 saxonXQ -s:./mondial_new.xml -qs:"//mountain[@id='mount-Mt_Whitney']" \!indent=yes
 
@@ -195,6 +200,16 @@ saxonXQ -s:./mondial.xml -qs:"count(//airport[@city=//province[name='California'
 saxonXQ -s:./mondial_new.xml -qs:"//airport[@country='CAL']" \!indent=yes
 saxonXQ -s:./mondial_new.xml -qs:"count(//airport[@city=//country[name='California']/city/string(@id)])" \!indent=yes
 ```
+
+#### via XSLT
+
+``` shell
+saxonXSL [path_of_mondial] calexitXSLT.xsl > [path_of_output1]
+
+xmllint -loaddtd -valid -noout mondial_new_xslt.xml
+```
+
+## Hints
 
 > The "Cursor API" using XMLStreamReader and XMLStreamWriter;
 > 
