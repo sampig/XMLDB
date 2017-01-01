@@ -96,11 +96,12 @@
 </xsl:template>
 <!-- Re-calculate groups of population -->
 <xsl:template match="country/ethnicgroup|country/religion|country/language">
+    <xsl:variable name="nodename"><xsl:value-of select="./name()"/></xsl:variable>
     <xsl:variable name="typename"><xsl:value-of select="string(.)"/></xsl:variable>
     <xsl:variable name="provvalue">
         <xsl:choose>
-            <xsl:when test="$calnew/child::node()[string(.)=$typename]">
-                <xsl:value-of select="number($calnew/child::node()[string(.)=$typename]/@percentage)*number($popprovince)"/>
+            <xsl:when test="$calnew/child::node()[string(.)=$typename and name()=$nodename]">
+                <xsl:value-of select="number($calnew/child::node()[string(.)=$typename and name()=$nodename]/@percentage)*number($popprovince)"/>
             </xsl:when>
             <xsl:otherwise>0</xsl:otherwise>
         </xsl:choose>
