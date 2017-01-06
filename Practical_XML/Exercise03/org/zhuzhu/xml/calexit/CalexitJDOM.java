@@ -297,8 +297,7 @@ public class CalexitJDOM {
             int countryArea = Integer.parseInt(origCountry.getAttributeValue("area")) - Integer.parseInt(areaNew);
             origCountry.setAttribute("area", String.valueOf(countryArea));
 
-            // Change its population.
-            // TODO: how about population_growth and infant_mortality?
+            // Change its population and relatives ones.
             List<Element> listPopulation = this.transformToElements(newCountryElement.getChildren("population"));
             Map<String, Element> mapPopulation = new HashMap<String, Element>(0);
             List<Element> listPopulationRemove = new ArrayList<Element>(0);
@@ -325,10 +324,16 @@ public class CalexitJDOM {
                 p.detach();
                 // origCountry.removeContent(p);
             }
+            String[] strPopRates = { "population_growth", "infant_mortality", "unemployment" };
+            for (String strPopRate : strPopRates) {
+                Element ePopRate = origCountry.getChild(strPopRate);
+                double oldPopRate = Double.parseDouble(ePopRate.getText()) * oldPop;
+                double newPopRate = oldPopRate - Double.parseDouble(newCountryElement.getChildText(strPopRate)) * provPop;
+                ePopRate.setText(String.format("%.2f", newPopRate / newPop));
+            }
 
-            // Change its GDP
-            // TODO: how about inflation and unemployment?
-            String[] strGdps = { "gdp_agri", "gdp_ind", "gdp_serv" };
+            // Change its GDP and relatives ones.
+            String[] strGdps = { "gdp_agri", "gdp_ind", "gdp_serv", "inflation" };
             Element gdpTotal = origCountry.getChild("gdp_total");
             long oldGdpTotal = Long.parseLong(gdpTotal.getText());
             long provGdpTotal = Long.parseLong(newCountryElement.getChildText("gdp_total"));
@@ -579,7 +584,9 @@ public class CalexitJDOM {
             for (String str : listOrgException) {
                 memberships = memberships.replace(str, "");
             }
-            memberships = memberships.replace("  ", " ").trim();
+            while (memberships.contains("  ")) {
+                memberships = memberships.replace("  ", " ").trim();
+            }
         }
         newCountryElement.setAttribute("memberships", memberships);
 
