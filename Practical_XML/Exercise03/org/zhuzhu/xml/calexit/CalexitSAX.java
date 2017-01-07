@@ -333,87 +333,130 @@ public class CalexitSAX {
                             listEventOrigCountry.add(eventFactory.createAttribute(attributes.getQName(i), attributes.getValue(i)));
                         }
                     }
-                } else if ("encompassed".equals(elementName) && isOrigCountry) {
-                    boolean flag = false;
-                    for (int i = 0; i < attributes.getLength(); i++) {
-                        if ("percentage".equals(attributes.getQName(i)) && "100".equals(attributes.getValue(i))) {
-                            flag = true;
-                            break;
+                } else if (isCalif) { // new country
+                    if ("city".equals(elementName)) {
+                        if (addNewinfor) { // add new info before city
+                            listEventNewinfor.addAll(posUnemployment, listEventEncompassed);
+                            listEventNewinfor.addAll(posUnemployment, this.getGovernment());
+                            listEventNewinfor.addAll(posUnemployment, this.getIndependentDate());
+                            listEventCalif.addAll(listEventNewinfor);
+                            addNewinfor = false;
                         }
+                        listEventCalif.add(event);
+                        for (int i = 0; i < attributes.getLength(); i++) { // deal with attributes of city.
+                            String attrName = attributes.getQName(i);
+                            if ("id".equals(attrName)) {
+                                String value = attributes.getValue(i).replace(countrynameOrig, countrynameNew);
+                                event = eventFactory.createAttribute(attributes.getQName(i), value);
+                                listEventCalif.add(event);
+                                if (value.equals(capitalNew)) {
+                                    event = eventFactory.createAttribute("is_country_cap", "yes");
+                                    listEventCalif.add(event);
+                                }
+                            } else if ("country".equals(attrName)) {
+                                event = eventFactory.createAttribute(attributes.getQName(i), carcodeNew);
+                                listEventCalif.add(event);
+                            } else if ("province".equals(attrName)) {
+                            }
+                            // event = eventFactory.createAttribute(attributes.getQName(i), attributes.getValue(i));
+                        }
+                        isArea = false;
+                    } else if (!"area".equals(elementName)) {
+                        listEventCalif.add(event);
+                        for (int i = 0; i < attributes.getLength(); i++) {
+                            event = eventFactory.createAttribute(attributes.getQName(i), attributes.getValue(i));
+                            listEventCalif.add(event);
+                        }
+                        isArea = false;
+                    } else {
+                        isArea = true;
                     }
-                    if (flag) {
-                        listEventEncompassed.add(event);
+                } else if (isOrigCountry) { // original country
+                    if ("encompassed".equals(elementName)) { // continent
+                        boolean flag = false;
                         listEventOrigCountry.add(event);
                         for (int i = 0; i < attributes.getLength(); i++) {
-                            listEventEncompassed.add(eventFactory.createAttribute(attributes.getQName(i), attributes.getValue(i)));
+                            listEventOrigCountry.add(eventFactory.createAttribute(attributes.getQName(i), attributes.getValue(i)));
+                            if ("percentage".equals(attributes.getQName(i)) && "100".equals(attributes.getValue(i))) {
+                                flag = true;
+                            }
+                        }
+                        if (flag) {
+                            listEventEncompassed.add(event);
+                            for (int i = 0; i < attributes.getLength(); i++) {
+                                listEventEncompassed.add(eventFactory.createAttribute(attributes.getQName(i), attributes.getValue(i)));
+                            }
+                            listEventEncompassed.add(eventFactory.createEndElement("", null, elementName));
+                        }
+                    } else if ("population".equals(elementName) && !isProvince) { // population
+                        isPopulation = true;
+                        for (int i = 0; i < attributes.getLength(); i++) {
+                            if ("year".equals(attributes.getQName(i)) && mapPopProvince.containsKey(attributes.getValue(i))) {
+                                popyear = attributes.getValue(i);
+                                break;
+                            }
+                        }
+                        if (popyear != null) {
+                            listEventOrigCountry.add(event);
+                            for (int i = 0; i < attributes.getLength(); i++) {
+                                listEventOrigCountry.add(eventFactory.createAttribute(attributes.getQName(i), attributes.getValue(i)));
+                            }
+                        }
+                    } else if ((elementName.contains("gdp_") || "inflation".equals(elementName)) && !isProvince) { // gdp
+                        isGdp = true;
+                        gdptype = elementName;
+                        listEventOrigCountry.add(event);
+                        for (int i = 0; i < attributes.getLength(); i++) {
                             listEventOrigCountry.add(eventFactory.createAttribute(attributes.getQName(i), attributes.getValue(i)));
                         }
-                        listEventEncompassed.add(eventFactory.createEndElement("", null, elementName));
-                        // listEventOrigCountry.add(eventFactory.createEndElement("", null, elementName));
-                    }
-                } else if ("population".equals(elementName) && isOrigCountry && !isProvince) {
-                    isPopulation = true;
-                    for (int i = 0; i < attributes.getLength(); i++) {
-                        if ("year".equals(attributes.getQName(i)) && mapPopProvince.containsKey(attributes.getValue(i))) {
-                            popyear = attributes.getValue(i);
-                            break;
+                    } else if (("ethnicgroup".equals(elementName) || "religion".equals(elementName) || "language".equals(elementName))
+                            && !isProvince) { // ethnicgroup, religion, language
+                        isPoprate2 = true;
+                        popratetype2 = elementName;
+                        for (int i = 0; i < attributes.getLength(); i++) {
+                            if ("percentage".equals(attributes.getQName(i))) {
+                                poprate2 = Double.parseDouble(attributes.getValue(i));
+                                break;
+                            }
                         }
-                    }
-                    if (popyear != null) {
+                    } else if (("population_growth".equals(elementName) || "infant_mortality".equals(elementName)
+                            || "unemployment".equals(elementName)) && !isProvince) { // population rate
+                        isPoprate = true;
+                        popratetype = elementName;
+                        listEventOrigCountry.add(event);
+                        for (int i = 0; i < attributes.getLength(); i++) {
+                            listEventOrigCountry.add(eventFactory.createAttribute(attributes.getQName(i), attributes.getValue(i)));
+                        }
+                    } else if ("border".equals(elementName)) { // border
+                        if (addNewborder) {
+                            listEventOrigCountry.add(eventFactory.createStartElement("", null, "border"));
+                            listEventOrigCountry.add(eventFactory.createAttribute("country", carcodeNew));
+                            listEventOrigCountry.add(eventFactory.createAttribute("length", mapBorder.get(carcodeOld)));
+                            listEventOrigCountry.add(eventFactory.createEndElement("", null, "border"));
+                            addNewborder = false;
+                        }
+                        listEventOrigCountry.add(event);
+                        String bordername = null;
+                        String length = null;
+                        for (int i = 0; i < attributes.getLength(); i++) {
+                            if ("country".equals(attributes.getQName(i))) {
+                                bordername = attributes.getValue(i);
+                            } else if ("length".equals(attributes.getQName(i))) {
+                                length = attributes.getValue(i);
+                            }
+                        }
+                        listEventOrigCountry.add(eventFactory.createAttribute("country", bordername));
+                        if (mapBorder.containsKey(bordername)) {
+                            Double l = Double.parseDouble(mapBorder.get(bordername));
+                            length = new DecimalFormat("#.##").format(Double.parseDouble(length) - l);
+                        }
+                        listEventOrigCountry.add(eventFactory.createAttribute("length", length));
+                    } else {
                         listEventOrigCountry.add(event);
                         for (int i = 0; i < attributes.getLength(); i++) {
                             listEventOrigCountry.add(eventFactory.createAttribute(attributes.getQName(i), attributes.getValue(i)));
                         }
                     }
-                } else if ((elementName.contains("gdp_") || "inflation".equals(elementName)) && isOrigCountry && !isProvince) { // gdp
-                    isGdp = true;
-                    gdptype = elementName;
-                    listEventOrigCountry.add(event);
-                    for (int i = 0; i < attributes.getLength(); i++) {
-                        listEventOrigCountry.add(eventFactory.createAttribute(attributes.getQName(i), attributes.getValue(i)));
-                    }
-                } else if (("ethnicgroup".equals(elementName) || "religion".equals(elementName) || "language".equals(elementName))
-                        && isOrigCountry && !isProvince) { // ethnicgroup, religion, language
-                    isPoprate2 = true;
-                    popratetype2 = elementName;
-                    for (int i = 0; i < attributes.getLength(); i++) {
-                        if ("percentage".equals(attributes.getQName(i))) {
-                            poprate2 = Double.parseDouble(attributes.getValue(i));
-                            break;
-                        }
-                    }
-                } else if (("population_growth".equals(elementName) || "infant_mortality".equals(elementName)
-                        || "unemployment".equals(elementName)) && isOrigCountry && !isProvince) { // population rate
-                    isPoprate = true;
-                    popratetype = elementName;
-                    listEventOrigCountry.add(event);
-                    for (int i = 0; i < attributes.getLength(); i++) {
-                        listEventOrigCountry.add(eventFactory.createAttribute(attributes.getQName(i), attributes.getValue(i)));
-                    }
-                } else if ("border".equals(elementName) && isOrigCountry) {
-                    if (addNewborder) {
-                        listEventOrigCountry.add(eventFactory.createStartElement("", null, "border"));
-                        listEventOrigCountry.add(eventFactory.createAttribute("country", carcodeNew));
-                        listEventOrigCountry.add(eventFactory.createAttribute("length", mapBorder.get(carcodeOld)));
-                        listEventOrigCountry.add(eventFactory.createEndElement("", null, "border"));
-                        addNewborder = false;
-                    }
-                    listEventOrigCountry.add(event);
-                    String bordername = null;
-                    String length = null;
-                    for (int i = 0; i < attributes.getLength(); i++) {
-                        if ("country".equals(attributes.getQName(i))) {
-                            bordername = attributes.getValue(i);
-                        } else if ("length".equals(attributes.getQName(i))) {
-                            length = attributes.getValue(i);
-                        }
-                    }
-                    listEventOrigCountry.add(eventFactory.createAttribute("country", bordername));
-                    if (mapBorder.containsKey(bordername)) {
-                        Double l = Double.parseDouble(mapBorder.get(bordername));
-                        length = new DecimalFormat("#.##").format(Double.parseDouble(length) - l);
-                    }
-                    listEventOrigCountry.add(eventFactory.createAttribute("length", length));
                 } else if (isBorderCountry) { // border country
                     if ("border".equals(elementName)) {
                         if (addNewborder) {
@@ -445,55 +488,10 @@ public class CalexitSAX {
                             listEventBorderCountry.add(eventFactory.createAttribute(attributes.getQName(i), attributes.getValue(i)));
                         }
                     }
-                } else {
-                    if (isCalif) {
-                        if ("city".equals(elementName)) {
-                            if (addNewinfor) { // add new info before city
-                                listEventNewinfor.addAll(posUnemployment, listEventEncompassed);
-                                listEventNewinfor.addAll(posUnemployment, this.getGovernment());
-                                listEventNewinfor.addAll(posUnemployment, this.getIndependentDate());
-                                listEventCalif.addAll(listEventNewinfor);
-                                addNewinfor = false;
-                            }
-                            listEventCalif.add(event);
-                            for (int i = 0; i < attributes.getLength(); i++) { // deal with attributes of city.
-                                String attrName = attributes.getQName(i);
-                                if ("id".equals(attrName)) {
-                                    String value = attributes.getValue(i).replace(countrynameOrig, countrynameNew);
-                                    event = eventFactory.createAttribute(attributes.getQName(i), value);
-                                    listEventCalif.add(event);
-                                    if (value.equals(capitalNew)) {
-                                        event = eventFactory.createAttribute("is_country_cap", "yes");
-                                        listEventCalif.add(event);
-                                    }
-                                } else if ("country".equals(attrName)) {
-                                    event = eventFactory.createAttribute(attributes.getQName(i), carcodeNew);
-                                    listEventCalif.add(event);
-                                } else if ("province".equals(attrName)) {
-                                }
-                                // event = eventFactory.createAttribute(attributes.getQName(i), attributes.getValue(i));
-                            }
-                            isArea = false;
-                        } else if (!"area".equals(elementName)) {
-                            listEventCalif.add(event);
-                            for (int i = 0; i < attributes.getLength(); i++) {
-                                event = eventFactory.createAttribute(attributes.getQName(i), attributes.getValue(i));
-                                listEventCalif.add(event);
-                            }
-                            isArea = false;
-                        } else {
-                            isArea = true;
-                        }
-                    } else if (isOrigCountry) {
-                        listEventOrigCountry.add(event);
-                        for (int i = 0; i < attributes.getLength(); i++) {
-                            listEventOrigCountry.add(eventFactory.createAttribute(attributes.getQName(i), attributes.getValue(i)));
-                        }
-                    } else { // other elements
-                        // writer.add(event);
-                        for (int i = 0; i < attributes.getLength(); i++) {
-                            // writer.add(eventFactory.createAttribute(attributes.getQName(i), attributes.getValue(i)));
-                        }
+                } else { // other elements
+                    // writer.add(event);
+                    for (int i = 0; i < attributes.getLength(); i++) {
+                        // writer.add(eventFactory.createAttribute(attributes.getQName(i), attributes.getValue(i)));
                     }
                 }
             } catch (Exception e) { // XMLStreamException
@@ -574,7 +572,7 @@ public class CalexitSAX {
                 if ("country".equals(elementName)) {
                     if (isOrigCountry) {
                         listEventOrigCountry.add(event);
-                         this.insertOrigCountry();
+                        this.insertOrigCountry();
                         // this.insertListEvent(listEventCalif);
                     } else if (isBorderCountry) {
                         listEventBorderCountry.add(event);
@@ -599,8 +597,7 @@ public class CalexitSAX {
                     carcodeCurrent = null;
                 } else if ("province".equals(elementName)) {
                     if (isCalif) {
-                        event = eventFactory.createEndElement("", null, "country");
-                        listEventCalif.add(event);
+                        listEventCalif.add(eventFactory.createEndElement("", null, "country"));
                     } else if (isOrigCountry) {
                         listEventOrigCountry.add(event);
                     } else if (isBorderCountry) {
@@ -610,26 +607,24 @@ public class CalexitSAX {
                     }
                     isProvince = false;
                     isCalif = false;
-                } else {
-                    if (isCalif) {
-                        if (!isArea) {
-                            listEventCalif.add(event);
-                        }
-                    } else if (isOrigCountry) {
-                        if ("population".equals(elementName) && !isProvince) {
-                            if (popyear != null) {
-                                listEventOrigCountry.add(event);
-                            }
-                            popyear = null;
-                            isPopulation = false;
-                        } else {
+                } else if (isCalif) {
+                    if (!isArea) {
+                        listEventCalif.add(event);
+                    }
+                } else if (isOrigCountry) {
+                    if ("population".equals(elementName) && !isProvince) {
+                        if (popyear != null) {
                             listEventOrigCountry.add(event);
                         }
-                    } else if (isBorderCountry) {
-                        listEventBorderCountry.add(event);
+                        popyear = null;
+                        isPopulation = false;
                     } else {
-                        // writer.add(event);
+                        listEventOrigCountry.add(event);
                     }
+                } else if (isBorderCountry) {
+                    listEventBorderCountry.add(event);
+                } else {
+                    // writer.add(event);
                 }
             } catch (Exception e) {// XMLStreamException
                 e.printStackTrace();
