@@ -33,7 +33,11 @@ import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.XMLEvent;
 
 import org.xml.sax.Attributes;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+import org.xml.sax.XMLReader;
 import org.xml.sax.ext.DefaultHandler2;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -46,22 +50,23 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class CalexitSAX {
 
-    private String sourcePath = "/usr/workspace/xml/mondial.xml";
-    private String ouptutPath = "/usr/workspace/xml/mondial_new.xml";
-    private String newinfoPath = "/usr/workspace/xml/calexit_new.xml";
+    // User-defined file path
+    private String sourcePath = "/afs/informatik.uni-goettingen.de/user/c/chenfeng.zhu/public_html/xml/lib/mondial.xml";
+    private String ouptutPath = "/afs/informatik.uni-goettingen.de/user/c/chenfeng.zhu/public_html/xml/ex03/mondial_new_sax.xml";
+    private String newinfoPath = "/afs/informatik.uni-goettingen.de/user/c/chenfeng.zhu/public_html/xml/ex03/calexit_new.xml";
 
+    // User-defined static variables
     private String provid = "prov-United-States-6";
     private List<String> listOrgException = Arrays.asList("org-G-5", "org-G-7");
+    private String goverment = "CA federal republic";
 
     private OutputStream outputStream;
 
+    // global information
     private String carcodeNew = "carcodeNew";
     private String carcodeOld = "carcodeOld";
     private String countrynameNew = "countrynameNew";
     private String countrynameOrig = "countrynameOrig";
-
-    private String membershipsNew;
-    private String capitalNew;
 
     private Double dAreaProvince;
     private Map<String, Long> mapPopProvince = new HashMap<String, Long>(0);
@@ -72,6 +77,8 @@ public class CalexitSAX {
     private Map<String, Double> mapGdpProvince = new HashMap<String, Double>(0);
     private Double dGdpProvince = 0d;
     private Double dGdpCountry = 0d;
+
+    private List<String> listCityoldidProvince = new ArrayList<String>(0);
 
     public static void main(String... strings) {
         String filepath = null;
@@ -94,6 +101,7 @@ public class CalexitSAX {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        csax.validate();
     }
 
     public CalexitSAX(String source, String target, String newinfor) {
@@ -147,8 +155,43 @@ public class CalexitSAX {
         Files.write(path, content.getBytes(charset));
     }
 
+    /**
+     * Validate XML document.
+     */
+    public void validate() {
+        System.out.println("\nValidate result:");
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        factory.setValidating(true);
+        factory.setNamespaceAware(true);
+        SimpleErrorHandler errerHandler = new SimpleErrorHandler();
+        try {
+            SAXParser parser = factory.newSAXParser();
+            XMLReader reader = parser.getXMLReader();
+            reader.setErrorHandler(errerHandler);
+            reader.parse(new InputSource(ouptutPath));
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (errerHandler.getResult()) {
+            System.out.println("PASS");
+        } else {
+            System.out.println("ERROR!");
+        }
+    }
+
+    /**
+     * The main handler to deal with the exit.
+     * 
+     * @author Chenfeng Zhu
+     *
+     */
     protected class MondialHandler extends DefaultHandler2 {
 
+        // for document format
         private XMLEvent eNewline = null;
         private XMLEvent eTab = null;
 
@@ -156,7 +199,6 @@ public class CalexitSAX {
         private XMLEventFactory eventFactory;
         private XMLEventWriter printer;
 
-        // private boolean isCountry = false;
         private boolean isProvince = false;
         private boolean isOrigCountry = false;
         private boolean isBorderCountry = false;
@@ -168,17 +210,24 @@ public class CalexitSAX {
         private List<XMLEvent> listEventBorderCountry = new ArrayList<XMLEvent>(0);
         private List<XMLEvent> listEventCalif = new ArrayList<XMLEvent>(0);
 
+        private String membershipsNew;
+        private List<String> listMembersNew = new ArrayList<String>(0);
+        private String capitalNew;
+
         private boolean addNewinfor = true;
         private List<XMLEvent> listEventNewinfor = new ArrayList<XMLEvent>(0);
         private int posUnemployment = 0;
-        private Map<String, String> mapBorder = new HashMap<String, String>(0);
         private String carcodeCurrent = null;
+        private Map<String, String> mapBorder = new HashMap<String, String>(0);
+        private boolean addNewborder = true;
 
         private List<XMLEvent> listEventEncompassed = new ArrayList<XMLEvent>(0);
 
+        // for population element of original country
         private boolean isPopulation = false;
         private String popyear = null;
 
+        // for GDP element of original country
         private boolean isGdp = false;
         private String gdptype = null;
         private boolean isPoprate = false;
@@ -187,7 +236,19 @@ public class CalexitSAX {
         private String popratetype2 = null;
         private double poprate2 = 0;
 
-        private boolean addNewborder = true;
+        // for organization element
+        private boolean isOrg = false;
+        private String orgid = null;
+
+        // for nature element
+        private List<String> listNaturename = Arrays.asList("sea", "river", "lake", "island", "mountain", "desert");
+        private List<String> listNaturenameSub = Arrays.asList("source", "estuary");
+        private boolean isNature = false;
+        private boolean isNatureSub = false;
+        private List<XMLEvent> listEventNature = new ArrayList<XMLEvent>(0);
+        private List<XMLEvent> listEventNatureSub = new ArrayList<XMLEvent>(0);
+        private Attribute attrNature = null;
+        private int posNatureAttr = 0;
 
         public MondialHandler() {
             super();
@@ -212,6 +273,7 @@ public class CalexitSAX {
                 e.printStackTrace();
             }
 
+            // pre-work to get basic information
             this.readOriginalCountry();
             this.readNewinfor();
             countrynameNew = countrynameNew.replaceAll(" ", "-");
@@ -220,26 +282,25 @@ public class CalexitSAX {
             System.out.println("Orig car_code: " + carcodeOld);
             System.out.println("New country name: " + countrynameNew);
             System.out.println("Orig country name: " + countrynameOrig);
-            System.out.println("Pop rate: " + mapPoprateProvince);
         }
 
-        public void startDTD(String name, String publicId, String systemId) throws SAXException {
+        public void startDTD(String name, String publicId, String systemId) throws SAXException { // useless
             System.out.println("startDTD");
             System.out.println(name);
             System.out.println(publicId);
             System.out.println(systemId);
         }
 
-        public void endDTD() throws SAXException {
+        public void endDTD() throws SAXException { // useless
             System.out.println("endDTD");
         }
 
-        public void startEntity(String name) throws SAXException {
+        public void startEntity(String name) throws SAXException { // useless
             System.out.println("startEntity");
             System.out.println(name);
         }
 
-        public void processingInstruction(String target, String data) throws SAXException {
+        public void processingInstruction(String target, String data) throws SAXException { // useless
             System.out.println("processingInstruction");
             System.out.println(target);
             System.out.println(data);
@@ -254,7 +315,7 @@ public class CalexitSAX {
             }
             XMLEvent event = eventFactory.createStartElement("", null, elementName);
             try {
-                if ("country".equals(elementName)) { // country element
+                if ("country".equals(elementName)) { // element: country
                     listEventOrigCountry.add(event);
                     listEventBorderCountry.add(event);
                     for (int i = 0; i < attributes.getLength(); i++) {
@@ -289,13 +350,13 @@ public class CalexitSAX {
                         listEventBorderCountry = new ArrayList<XMLEvent>(0);
                     }
                     if (!isOrigCountry && !isBorderCountry) {
-                        // writer.add(event);
-                        // for (int i = 0; i < attributes.getLength(); i++) {
-                        // writer.add(eventFactory.createAttribute(attributes.getQName(i), attributes.getValue(i)));
-                        // }
+                        writer.add(eNewline);
+                        writer.add(event);
+                        for (int i = 0; i < attributes.getLength(); i++) {
+                            writer.add(eventFactory.createAttribute(attributes.getQName(i), attributes.getValue(i)));
+                        }
                     }
-                    // isCountry = true;
-                } else if ("province".equals(elementName) && isOrigCountry) { // province element
+                } else if ("province".equals(elementName) && isOrigCountry) { // element: province
                     isProvince = true;
                     for (int i = 0; i < attributes.getLength(); i++) {
                         if (attributes.getQName(i).equals("id") && attributes.getValue(i).equals(provid)) {
@@ -313,8 +374,7 @@ public class CalexitSAX {
                         for (int i = 0; i < attributes.getLength(); i++) {
                             if ("capital".equals(attributes.getQName(i))) { // attr: capital
                                 capitalNew = attributes.getValue(i).replace(countrynameOrig, countrynameNew);
-                                event = eventFactory.createAttribute(attributes.getQName(i), capitalNew);
-                                listEventCalif.add(event);
+                                listEventCalif.add(eventFactory.createAttribute(attributes.getQName(i), capitalNew));
                             }
                         }
                         // remove org exception
@@ -325,8 +385,9 @@ public class CalexitSAX {
                             membershipsNew = membershipsNew.replace("  ", " ");
                         }
                         membershipsNew = membershipsNew.trim();
-                        event = eventFactory.createAttribute("memberships", membershipsNew); // attr: car_code
-                        listEventCalif.add(event);
+                        listEventCalif.add(eventFactory.createAttribute("memberships", membershipsNew)); // attr:
+                                                                                                         // memberships
+                        listMembersNew = Arrays.asList(membershipsNew.split(" "));
                     } else if (isOrigCountry) { // if it is a normal province
                         listEventOrigCountry.add(event);
                         for (int i = 0; i < attributes.getLength(); i++) {
@@ -346,26 +407,23 @@ public class CalexitSAX {
                         for (int i = 0; i < attributes.getLength(); i++) { // deal with attributes of city.
                             String attrName = attributes.getQName(i);
                             if ("id".equals(attrName)) {
-                                String value = attributes.getValue(i).replace(countrynameOrig, countrynameNew);
-                                event = eventFactory.createAttribute(attributes.getQName(i), value);
-                                listEventCalif.add(event);
+                                String value = attributes.getValue(i);
+                                listCityoldidProvince.add(value);
+                                value = value.replace(countrynameOrig, countrynameNew);
+                                listEventCalif.add(eventFactory.createAttribute(attributes.getQName(i), value));
                                 if (value.equals(capitalNew)) {
-                                    event = eventFactory.createAttribute("is_country_cap", "yes");
-                                    listEventCalif.add(event);
+                                    listEventCalif.add(eventFactory.createAttribute("is_country_cap", "yes"));
                                 }
                             } else if ("country".equals(attrName)) {
-                                event = eventFactory.createAttribute(attributes.getQName(i), carcodeNew);
-                                listEventCalif.add(event);
+                                listEventCalif.add(eventFactory.createAttribute(attributes.getQName(i), carcodeNew));
                             } else if ("province".equals(attrName)) {
                             }
-                            // event = eventFactory.createAttribute(attributes.getQName(i), attributes.getValue(i));
                         }
                         isArea = false;
                     } else if (!"area".equals(elementName)) {
                         listEventCalif.add(event);
                         for (int i = 0; i < attributes.getLength(); i++) {
-                            event = eventFactory.createAttribute(attributes.getQName(i), attributes.getValue(i));
-                            listEventCalif.add(event);
+                            listEventCalif.add(eventFactory.createAttribute(attributes.getQName(i), attributes.getValue(i)));
                         }
                         isArea = false;
                     } else {
@@ -488,13 +546,199 @@ public class CalexitSAX {
                             listEventBorderCountry.add(eventFactory.createAttribute(attributes.getQName(i), attributes.getValue(i)));
                         }
                     }
-                } else { // other elements
-                    // writer.add(event);
+                } else if ("organization".equals(elementName)) { // element: organization
+                    isOrg = true;
+                    writer.add(eNewline);
+                    writer.add(event);
                     for (int i = 0; i < attributes.getLength(); i++) {
-                        // writer.add(eventFactory.createAttribute(attributes.getQName(i), attributes.getValue(i)));
+                        writer.add(eventFactory.createAttribute(attributes.getQName(i), attributes.getValue(i)));
+                        if ("id".equals(attributes.getQName(i))) {
+                            orgid = attributes.getValue(i);
+                        }
+                    }
+                } else if (isOrg && "members".equals(elementName)) { // organization
+                    writer.add(eNewline);
+                    writer.add(event);
+                    for (int i = 0; i < attributes.getLength(); i++) {
+                        String value = attributes.getValue(i);
+                        if ("country".equals(attributes.getQName(i)) && listMembersNew.contains(orgid)) {
+                            List<String> list = Arrays.asList(value.split(" "));
+                            if (list.contains(carcodeOld)) {
+                                value += " " + carcodeNew;
+                            }
+                        }
+                        writer.add(eventFactory.createAttribute(attributes.getQName(i), value));
+                    }
+                } else if (listNaturename.contains(elementName)) { // element: nature
+                    isNature = true;
+                    listEventNature.add(event);
+                    for (int i = 0; i < attributes.getLength(); i++) {
+                        String attrname = attributes.getQName(i);
+                        String value = attributes.getValue(i);
+                        if ("country".equals(attrname)) {
+                            attrNature = eventFactory.createAttribute(attrname, value);
+                            posNatureAttr = listEventNature.size();
+                            listEventNature.add(attrNature);
+                        } else {
+                            listEventNature.add(eventFactory.createAttribute(attrname, value));
+                        }
+                    }
+                } else if (listNaturenameSub.contains(elementName)) { // element: source or estuary
+                    isNatureSub = true;
+                    listEventNatureSub.add(event);
+                    for (int i = 0; i < attributes.getLength(); i++) {
+                        String attrname = attributes.getQName(i);
+                        String value = attributes.getValue(i);
+                        if ("country".equals(attrname)) {
+                            attrNature = eventFactory.createAttribute(attrname, value);
+                            posNatureAttr = listEventNatureSub.size();
+                            listEventNatureSub.add(attrNature);
+                        } else {
+                            listEventNatureSub.add(eventFactory.createAttribute(attrname, value));
+                        }
+                    }
+                } else if (isNature && !isNatureSub) { // nature
+                    if ("located".equals(elementName)) {
+                        String ctry = null;
+                        String prov = null;
+                        for (int i = 0; i < attributes.getLength(); i++) {
+                            String attrname = attributes.getQName(i);
+                            String value = attributes.getValue(i);
+                            if ("country".equals(attrname)) {
+                                ctry = value;
+                            } else if ("province".equals(attrname)) {
+                                prov = value;
+                            }
+                        }
+                        if (provid.equals(prov)) { // only one province
+                            ctry = carcodeNew;
+                            prov = null;
+                            listEventNature.remove(attrNature);
+                            String cc = attrNature.getValue();
+                            if (cc != null) {
+                                List<String> listcc = new ArrayList<String>(0);
+                                for (String c : cc.split(" ")) {
+                                    if (carcodeOld.equals(c)) {
+                                        listcc.add(carcodeNew);
+                                    } else {
+                                        listcc.add(c);
+                                    }
+                                }
+                                attrNature = eventFactory.createAttribute("country", String.join(" ", listcc));
+                                listEventNature.add(posNatureAttr, attrNature);
+                            }
+                        } else if (prov != null && prov.contains(provid)) {
+                            prov = prov.replace(provid, "").replace("  ", " ");
+                            listEventNature.add(eventFactory.createStartElement("", null, elementName));
+                            listEventNature.add(eventFactory.createAttribute("country", carcodeNew));
+                            listEventNature.add(eventFactory.createEndElement("", null, elementName));
+                            listEventNature.remove(attrNature);
+                            String cc = attrNature.getValue();
+                            if (cc != null) {
+                                attrNature = eventFactory.createAttribute("country", cc + " " + carcodeNew);
+                                listEventNature.add(posNatureAttr, attrNature);
+                            }
+                        }
+                        listEventNature.add(event);
+                        if (ctry != null) {
+                            listEventNature.add(eventFactory.createAttribute("country", ctry));
+                        }
+                        if (prov != null) {
+                            listEventNature.add(eventFactory.createAttribute("province", prov));
+                        }
+                    } else {
+                        listEventNature.add(event);
+                        for (int i = 0; i < attributes.getLength(); i++) {
+                            listEventNature.add(eventFactory.createAttribute(attributes.getQName(i), attributes.getValue(i)));
+                        }
+                    }
+                } else if (isNatureSub) { // source or estuary
+                    if ("located".equals(elementName)) {
+                        String ctry = null;
+                        String prov = null;
+                        for (int i = 0; i < attributes.getLength(); i++) {
+                            String attrname = attributes.getQName(i);
+                            String value = attributes.getValue(i);
+                            if ("country".equals(attrname)) {
+                                ctry = value;
+                            } else if ("province".equals(attrname)) {
+                                prov = value;
+                            }
+                        }
+                        if (provid.equals(prov)) { // only one province
+                            ctry = carcodeNew;
+                            prov = null;
+                            listEventNatureSub.remove(attrNature);
+                            String cc = attrNature.getValue();
+                            if (cc != null) {
+                                List<String> listcc = new ArrayList<String>(0);
+                                for (String c : cc.split(" ")) {
+                                    if (carcodeOld.equals(c)) {
+                                        listcc.add(carcodeNew);
+                                    } else {
+                                        listcc.add(c);
+                                    }
+                                }
+                                attrNature = eventFactory.createAttribute("country", String.join(" ", listcc));
+                                listEventNatureSub.add(posNatureAttr, attrNature);
+                            }
+                        } else if (prov != null && prov.contains(provid)) {
+                            prov = prov.replace(provid, "").replace("  ", " ");
+                            listEventNatureSub.add(eventFactory.createStartElement("", null, elementName));
+                            listEventNatureSub.add(eventFactory.createAttribute("country", carcodeNew));
+                            listEventNatureSub.add(eventFactory.createEndElement("", null, elementName));
+                            listEventNatureSub.remove(attrNature);
+                            String cc = attrNature.getValue();
+                            if (cc != null) {
+                                attrNature = eventFactory.createAttribute("country", cc + " " + carcodeNew);
+                                listEventNatureSub.add(posNatureAttr, attrNature);
+                            }
+                        }
+                        listEventNatureSub.add(event);
+                        if (ctry != null) {
+                            listEventNatureSub.add(eventFactory.createAttribute("country", ctry));
+                        }
+                        if (prov != null) {
+                            listEventNatureSub.add(eventFactory.createAttribute("province", prov));
+                        }
+                    } else {
+                        listEventNatureSub.add(event);
+                        for (int i = 0; i < attributes.getLength(); i++) {
+                            listEventNatureSub.add(eventFactory.createAttribute(attributes.getQName(i), attributes.getValue(i)));
+                        }
+                    }
+                } else if ("airport".equals(elementName)) { // element: airport
+                    writer.add(eNewline);
+                    writer.add(event);
+                    String ctyid = null;
+                    String ctrycode = null;
+                    for (int i = 0; i < attributes.getLength(); i++) {
+                        String attrname = attributes.getQName(i);
+                        String value = attributes.getValue(i);
+                        if ("city".equals(attrname)) {
+                            ctyid = value;
+                        } else if ("country".equals(attrname)) {
+                            ctrycode = value;
+                        } else {
+                            writer.add(eventFactory.createAttribute(attributes.getQName(i), attributes.getValue(i)));
+                        }
+                    }
+                    if (listCityoldidProvince.contains(ctyid)) {
+                        ctyid = ctyid.replace(countrynameOrig, countrynameNew);
+                        ctrycode = carcodeNew;
+                    }
+                    if (ctyid != null) {
+                        writer.add(eventFactory.createAttribute("city", ctyid));
+                    }
+                    writer.add(eventFactory.createAttribute("country", ctrycode));
+                } else { // other elements
+                    writer.add(eNewline);
+                    writer.add(event);
+                    for (int i = 0; i < attributes.getLength(); i++) {
+                        writer.add(eventFactory.createAttribute(attributes.getQName(i), attributes.getValue(i)));
                     }
                 }
-            } catch (Exception e) { // XMLStreamException
+            } catch (XMLStreamException e) {
                 e.printStackTrace();
             }
         }
@@ -503,14 +747,14 @@ public class CalexitSAX {
             String content = new String(ch, start, length);
             XMLEvent event = eventFactory.createCharacters(content);
             try {
-                if (isCalif) {
+                if (isCalif) { // new country
                     if (!isArea) {
                         listEventCalif.add(event);
                     } else {
                         event = eventFactory.createAttribute("area", content); // attr: area
                         listEventCalif.add(posCountry + 1, event);
                     }
-                } else if (isOrigCountry) {
+                } else if (isOrigCountry) { // original country
                     if (isPopulation) { // re-calculate the population
                         if (popyear != null) {
                             lPopCountry = Long.parseLong(content);
@@ -550,12 +794,16 @@ public class CalexitSAX {
                     } else {
                         listEventOrigCountry.add(event);
                     }
-                } else if (isBorderCountry) {
+                } else if (isBorderCountry) { // border country
                     listEventBorderCountry.add(event);
+                } else if (isNature && !isNatureSub) { // nature
+                    listEventNature.add(event);
+                } else if (isNatureSub) { // source or estuary
+                    listEventNatureSub.add(event);
                 } else {
-                    // writer.add(event);
+                    writer.add(event);
                 }
-            } catch (Exception e) { // XMLStreamException
+            } catch (XMLStreamException e) {
                 e.printStackTrace();
             }
         }
@@ -569,21 +817,19 @@ public class CalexitSAX {
             }
             XMLEvent event = eventFactory.createEndElement("", null, elementName);
             try {
-                if ("country".equals(elementName)) {
+                if ("country".equals(elementName)) { // element: country
                     if (isOrigCountry) {
                         listEventOrigCountry.add(event);
                         this.insertOrigCountry();
-                        // this.insertListEvent(listEventCalif);
+                        this.insertListEventFormat(listEventCalif);
                     } else if (isBorderCountry) {
                         listEventBorderCountry.add(event);
-                        this.insertListEvent(listEventBorderCountry);
+                        this.insertListEventFormat(listEventBorderCountry);
                     } else {
-                        // writer.add(event);
+                        writer.add(event);
                     }
                     listEventOrigCountry = new ArrayList<XMLEvent>(0);
                     listEventBorderCountry = new ArrayList<XMLEvent>(0);
-                    // listEventCalif = new ArrayList<XMLEvent>(0);
-                    // isCountry = false;
                     isOrigCountry = false;
                     isBorderCountry = false;
                     isProvince = false;
@@ -595,7 +841,7 @@ public class CalexitSAX {
                     isPoprate2 = false;
                     addNewborder = true;
                     carcodeCurrent = null;
-                } else if ("province".equals(elementName)) {
+                } else if ("province".equals(elementName)) { // element: province
                     if (isCalif) {
                         listEventCalif.add(eventFactory.createEndElement("", null, "country"));
                     } else if (isOrigCountry) {
@@ -603,7 +849,7 @@ public class CalexitSAX {
                     } else if (isBorderCountry) {
                         listEventBorderCountry.add(event);
                     } else {
-                        // writer.add(event);
+                        writer.add(event);
                     }
                     isProvince = false;
                     isCalif = false;
@@ -623,10 +869,32 @@ public class CalexitSAX {
                     }
                 } else if (isBorderCountry) {
                     listEventBorderCountry.add(event);
+                } else if ("organization".equals(elementName)) { // element: organization
+                    writer.add(event);
+                    isOrg = false;
+                    orgid = null;
+                } else if (listNaturename.contains(elementName)) { // element: nature
+                    listEventNature.add(event);
+                    this.insertListEventFormat(listEventNature);
+                    isNature = false;
+                    listEventNature = new ArrayList<XMLEvent>(0);
+                    attrNature = null;
+                    posNatureAttr = 0;
+                } else if (listNaturenameSub.contains(elementName)) { // element: source or estuary
+                    listEventNatureSub.add(event);
+                    listEventNature.addAll(listEventNatureSub);
+                    isNatureSub = false;
+                    listEventNatureSub = new ArrayList<XMLEvent>(0);
+                    attrNature = null;
+                    posNatureAttr = 0;
+                } else if (isNature && !isNatureSub) { // nature
+                    listEventNature.add(event);
+                } else if (isNatureSub) { // source or estuary
+                    listEventNatureSub.add(event);
                 } else {
-                    // writer.add(event);
+                    writer.add(event);
                 }
-            } catch (Exception e) {// XMLStreamException
+            } catch (XMLStreamException e) {
                 e.printStackTrace();
             }
         }
@@ -665,10 +933,33 @@ public class CalexitSAX {
 
         private void insertOrigCountry() {
             this.changeOrgiCountry();
-            this.insertListEvent(listEventOrigCountry);
+            this.insertListEventFormat(listEventOrigCountry);
         }
 
-        private void insertListEvent(List<XMLEvent> list) {
+        /**
+         * Insert events without indent.
+         * 
+         * @param list
+         */
+        protected void insertListEventFlat(List<XMLEvent> list) {
+            try {
+                for (XMLEvent e : list) {
+                    if (e.isStartElement()) {
+                        writer.add(eNewline);
+                    }
+                    writer.add(e);
+                }
+            } catch (XMLStreamException e) {
+                e.printStackTrace();
+            }
+        }
+
+        /**
+         * Insert events with indent.
+         * 
+         * @param list
+         */
+        protected void insertListEventFormat(List<XMLEvent> list) {
             try {
                 int start = 0;
                 int end = 0;
@@ -697,6 +988,11 @@ public class CalexitSAX {
             }
         }
 
+        /**
+         * Get a list event of indep_date element.
+         * 
+         * @return
+         */
         private List<XMLEvent> getIndependentDate() {
             List<XMLEvent> list = new ArrayList<XMLEvent>(0);
             list.add(eventFactory.createStartElement("", null, "indep_date"));
@@ -708,10 +1004,15 @@ public class CalexitSAX {
             return list;
         }
 
+        /**
+         * Get a list event of government element.
+         * 
+         * @return
+         */
         private List<XMLEvent> getGovernment() {
             List<XMLEvent> list = new ArrayList<XMLEvent>(0);
             list.add(eventFactory.createStartElement("", null, "government"));
-            list.add(eventFactory.createCharacters("CA federal republic"));
+            list.add(eventFactory.createCharacters(goverment));
             list.add(eventFactory.createEndElement("", null, "government"));
             return list;
         }
@@ -802,7 +1103,6 @@ public class CalexitSAX {
         private boolean isArea = false;
 
         private String year;
-        // private Map<String, String> mapPop = new HashMap<String, String>(0);
         private boolean isPopulation;
 
         public OrigcountryHandler() {
@@ -1020,7 +1320,6 @@ public class CalexitSAX {
                 printer.add(event);
                 printer.flush();
                 printer.close();
-                // System.out.println("New car_code: " + carcodeNew);
             } catch (XMLStreamException e) {
                 e.printStackTrace();
             }
@@ -1039,4 +1338,32 @@ public class CalexitSAX {
         }
     }
 
+    /**
+     * Error Handler to output the validation result.
+     * 
+     * @author Chenfeng Zhu
+     *
+     */
+    public class SimpleErrorHandler implements ErrorHandler {
+        private boolean pass = true;
+
+        public void warning(SAXParseException e) throws SAXException {
+            pass = false;
+            System.out.println(e.getMessage());
+        }
+
+        public void error(SAXParseException e) throws SAXException {
+            pass = false;
+            System.out.println(e.getMessage());
+        }
+
+        public void fatalError(SAXParseException e) throws SAXException {
+            pass = false;
+            System.out.println(e.getMessage());
+        }
+
+        public boolean getResult() {
+            return this.pass;
+        }
+    }
 }
