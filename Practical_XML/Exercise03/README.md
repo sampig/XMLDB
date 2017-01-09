@@ -131,7 +131,7 @@ Once a province or a city leaves a country.
         - Attributes: change id and country, remove province.
     - Add new information for it.
     - Add "continent" from country.
-    - Add "indep_date".
+    - Add "indep_date", "goverment".
     - Add ""is_country_cap" for new capital city.
     - Get the element of the province or the city. Change it to the country and add it under "mondial".
 2. Modify original Country.
@@ -166,12 +166,15 @@ xmllint -loaddtd -valid -noout mondial_new.xml
 
 # check new country
 saxonXQ -s:./mondial_new.xml -qs:"//country[@car_code='CAL']" \!indent=yes
-saxonXQ -s:./mondial_new.xml -qs:"//country[@car_code='USA']/province[name='California']" \!indent=yes
 saxonXQ -s:./mondial_new.xml -qs:"//node()[name='California']/name" \!indent=yes
 saxonXQ -s:./mondial_new.xml -qs:"//node()[name='California']/indep_date" \!indent=yes
 saxonXQ -s:./mondial_new.xml -qs:"//node()[name='California']/government" \!indent=yes
 saxonXQ -s:./mondial_new.xml -qs:"//node()[name='California']/encompassed" \!indent=yes
 saxonXQ -s:./mondial_new.xml -qs:"//node()[name='California']/city[@is_country_cap]" \!indent=yes
+
+# check original country
+saxonXQ -s:./mondial_new.xml -qs:"//country[@car_code='USA']" \!indent=yes
+saxonXQ -s:./mondial_new.xml -qs:"//country[@car_code='USA']/province[name='California']" \!indent=yes
 
 # check borders
 saxonXQ -s:./mondial_new.xml -qs:"//country[@car_code='CAL']/border" \!indent=yes
@@ -181,14 +184,15 @@ saxonXQ -s:./mondial_new.xml -qs:"//country[@car_code='MEX']/border" \!indent=ye
 saxonXQ -s:./mondial_new.xml -qs:"//idref('prov-United-States-6')/parent::node()[name()!='city']" \!indent=yes
 saxonXQ -s:./mondial_new.xml -qs:"//idref('prov-California-6')/parent::node()[name()!='city']" \!indent=yes
 saxonXQ -s:./mondial_new.xml -qs:"//node()[@country='CAL']/parent::node()[name()!='city']" \!indent=yes
-saxonXQ -s:./mondial_new.xml -qs:"//node()[@country='CAL']/parent::node()[name()!='city']" \!indent=yes
 
 # check organizations:
 saxonXQ -s:./mondial_new.xml -qs:"//organization[@id='org-G-10']" \!indent=yes
+saxonXQ -s:./mondial_new.xml -qs:"//organization[@id='org-AfDB']" \!indent=yes
 saxonXQ -s:./mondial_new.xml -qs:"//organization[@id='org-G-5']" \!indent=yes
 saxonXQ -s:./mondial_new.xml -qs:"//organization[@id='org-G-7']" \!indent=yes
 
 # check nature elements:
+saxonXQ -s:./mondial_new.xml -qs:"//located[@country='CAL']//parent::node()" \!indent=yes
 saxonXQ -s:./mondial_new.xml -qs:"//sea[@id='sea-Pacific']" \!indent=yes
 saxonXQ -s:./mondial_new.xml -qs:"//river[@id='river-Colorado_River']" \!indent=yes
 saxonXQ -s:./mondial_new.xml -qs:"//river[@id='river-TruckeeRiver']" \!indent=yes
@@ -207,6 +211,18 @@ saxonXQ -s:./mondial_new.xml -qs:"count(//airport[@city=//country[name='Californ
 saxonXSL [path_of_mondial] calexitXSLT.xsl > [path_of_output1]
 
 xmllint -loaddtd -valid -noout mondial_new_xslt.xml
+```
+
+#### via SAX/StAX
+
+``` shell
+javac org/zhuzhu/xml/calexit/CalexitSAX.java
+
+java org.zhuzhu.xml.calexit.CalexitSAX [path_of_mondial] [path_of_output1] [path_of_new_info]
+
+javac org/zhuzhu/xml/calexit/CalexitStAX.java
+
+java org.zhuzhu.xml.calexit.CalexitStAX [path_of_mondial] [path_of_output1] [path_of_new_info]
 ```
 
 ## Hints
