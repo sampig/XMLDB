@@ -9,6 +9,11 @@ Author: [ZHU, Chenfeng](http://about.me/zhuchenfeng)
     * [Exercise DOM](#exercise-dom)
     * [Exercise SAX](#exercise-sax)
     * [Exercise StAX](#exercise-stax)
+    * [Exercise Calexit](#exercise-calexit)
+        * [Common](#common)
+        * [via JDOM](#via-jdom)
+        * [via XSLT](#via-xslt)
+        * [via SAX/StAX](#via-saxstax)
 * [Hints](#hints)
 
 ## Solutions
