@@ -701,7 +701,7 @@ public class CalexitStAX {
                                     list.add(str);
                                 }
                             }
-                            ctry = String.join(" ", list);
+                            ctry = this.join(list, " ");
                         } else if (listNatureidMulti.contains(natureid)) {
                             ctry += " " + carcodeNew;
                         }
@@ -725,7 +725,7 @@ public class CalexitStAX {
                                     list.add(str);
                                 }
                             }
-                            ctry = String.join(" ", list);
+                            ctry = this.join(list, " ");
                         } else if (mapNatureSubidMulti.containsKey(natureid) && mapNatureSubidMulti.get(natureid).contains(nodename)) {
                             ctry += " " + carcodeNew;
                         }
@@ -924,6 +924,14 @@ public class CalexitStAX {
             System.out.println("ERROR!");
         }
     }
+
+   public String join(List<String> list, String d) {
+       StringBuffer sb = new StringBuffer();
+       for (String str : list) {
+           sb.append(str + d);
+       }
+       return sb.substring(0, sb.length()-1);
+   }
 
     /**
      * Error Handler to output the validation result.

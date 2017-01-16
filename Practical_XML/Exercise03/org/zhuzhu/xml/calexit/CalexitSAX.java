@@ -624,7 +624,7 @@ public class CalexitSAX {
                                         listcc.add(c);
                                     }
                                 }
-                                attrNature = eventFactory.createAttribute("country", String.join(" ", listcc));
+                                attrNature = eventFactory.createAttribute("country", this.join(listcc, " "));
                                 listEventNature.add(posNatureAttr, attrNature);
                             }
                         } else if (prov != null && prov.contains(provid)) {
@@ -679,7 +679,7 @@ public class CalexitSAX {
                                         listcc.add(c);
                                     }
                                 }
-                                attrNature = eventFactory.createAttribute("country", String.join(" ", listcc));
+                                attrNature = eventFactory.createAttribute("country", this.join(listcc, " "));
                                 listEventNatureSub.add(posNatureAttr, attrNature);
                             }
                         } else if (prov != null && prov.contains(provid)) {
@@ -1080,6 +1080,14 @@ public class CalexitSAX {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+
+        public String join(List<String> list, String d) {
+            StringBuffer sb = new StringBuffer();
+            for (String str : list) {
+                sb.append(str + d);
+            }
+            return sb.substring(0, sb.length()-1);
         }
     }
 
