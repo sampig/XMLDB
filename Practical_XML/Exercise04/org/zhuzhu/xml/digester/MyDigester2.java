@@ -7,8 +7,6 @@ package org.zhuzhu.xml.digester;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.apache.commons.digester3.Digester;
 import org.apache.commons.digester3.ObjectCreateRule;
@@ -56,11 +54,11 @@ public class MyDigester2 {
         // read all sea.
         Digester digester = new Digester();
         digester.push(new SeaMap());
-        digester.addRule("", new ObjectCreateRule(Sea.class) {
+        digester.addRule("", new ObjectCreateRule(SeaModel.class) {
             public void end(String namespace, String name) throws Exception {
             };
         });
-        digester.addObjectCreate("mondial/sea", Sea.class);
+        digester.addObjectCreate("mondial/sea", SeaModel.class);
         digester.addSetProperties("mondial/sea", "id", "seaid");
         digester.addBeanPropertySetter("mondial/sea/name", "name");
         digester.addSetNext("mondial/sea", "addSea");
@@ -77,18 +75,18 @@ public class MyDigester2 {
         // read all rivers or lakes.
         Digester digester2 = new Digester();
         digester2.push(new RiverLakeMap());
-        digester2.addRule("", new ObjectCreateRule(RiverLake.class) {
+        digester2.addRule("", new ObjectCreateRule(RiverLakeModel.class) {
             public void end(String namespace, String name) throws Exception {
             };
         });
-        digester2.addObjectCreate("mondial/river", RiverLake.class);
+        digester2.addObjectCreate("mondial/river", RiverLakeModel.class);
         digester2.addSetProperties("mondial/river", "id", "rlid");
         digester2.addBeanPropertySetter("mondial/river/name", "name");
         digester2.addBeanPropertySetter("mondial/river/length", "length");
         digester2.addCallMethod("mondial/river/to", "addDestination", 1);
         digester2.addCallParam("mondial/river/to", 0, "water");
         digester2.addSetNext("mondial/river", "addRiverLake");
-        digester2.addObjectCreate("mondial/lake", RiverLake.class);
+        digester2.addObjectCreate("mondial/lake", RiverLakeModel.class);
         digester2.addSetProperties("mondial/lake", "id", "rlid");
         digester2.addBeanPropertySetter("mondial/lake/name", "name");
         digester2.addCallMethod("mondial/lake/to", "addDestination", 1);
@@ -112,7 +110,7 @@ public class MyDigester2 {
         printSea(seamap.get("sea-Nordsee"));
         // print all sea.
         for (String id : seamap.keySet()) {
-            Sea s = seamap.get(id);
+            SeaModel s = seamap.get(id);
             printSea(s);
         }
     }
@@ -122,9 +120,9 @@ public class MyDigester2 {
      * 
      * @param sea
      */
-    public void printSea(Sea sea) {
+    public void printSea(SeaModel sea) {
         System.out.println(sea.toString() + " TotalLength: " + sea.getTransitiveLength());
-        for (RiverLake rl : sea.sources) {
+        for (RiverLakeModel rl : sea.sources) {
             printRiverLake(rl, 1);
         }
     }
@@ -135,7 +133,7 @@ public class MyDigester2 {
      * @param rl
      * @param depth
      */
-    public void printRiverLake(RiverLake rl, int depth) {
+    public void printRiverLake(RiverLakeModel rl, int depth) {
         if (depth > DEPTH) { // in case of endless recurse.
             return;
         }
@@ -143,113 +141,10 @@ public class MyDigester2 {
             System.out.print(INDENT);
         }
         System.out.println("-" + rl.toString() + " TotalLength: " + rl.getTransitiveLength(1));
-        for (RiverLake r : rl.sources) {
+        for (RiverLakeModel r : rl.sources) {
             printRiverLake(r, depth + 1);
         }
 
-    }
-
-    /**
-     * Model: Sea
-     * 
-     * @author Chenfeng Zhu
-     *
-     */
-    public static class Sea {
-        String seaid = null;
-        String name = null;
-        double length;
-        Set<RiverLake> sources;
-
-        public Sea() {
-            sources = new HashSet<RiverLake>(0);
-        }
-
-        public String getSeaid() {
-            return seaid;
-        }
-
-        public void setSeaid(String seaid) {
-            this.seaid = seaid;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public double getLength() {
-            return length;
-        }
-
-        public void setLength(double length) {
-            this.length = length;
-        }
-
-        public Set<RiverLake> getSources() {
-            return sources;
-        }
-
-        public void setSources(Set<RiverLake> sources) {
-            this.sources = sources;
-        }
-
-        public double getTransitiveLength() {
-            double t_length = length;
-            for (RiverLake r : sources) {
-                t_length += r.getTransitiveLength(1);
-            }
-            return t_length;
-        }
-
-        public void addSource(RiverLake r) {
-            sources.add(r);
-        }
-
-        public void addSources(RiverLakeMap map) {
-            if (seaid == null) {
-                return;
-            }
-            for (String rlid : map.keySet()) {
-                RiverLake rl = map.get(rlid);
-                if (rl.getRlid() != null && rl.getTos().contains(seaid)) {
-                    this.addSource(rl);
-                }
-            }
-        }
-
-        @Override
-        public int hashCode() {
-            final int prime = 31;
-            int result = 1;
-            result = prime * result + ((seaid == null) ? 0 : seaid.hashCode());
-            return result;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj)
-                return true;
-            if (obj == null)
-                return false;
-            if (getClass() != obj.getClass())
-                return false;
-            Sea other = (Sea) obj;
-            if (seaid == null) {
-                if (other.seaid != null)
-                    return false;
-            } else if (!seaid.equals(other.seaid))
-                return false;
-            return true;
-        }
-
-        @Override
-        public String toString() {
-            return seaid + "(" + name + ")";
-        }
     }
 
     /**
@@ -258,133 +153,27 @@ public class MyDigester2 {
      * @author Chenfeng Zhu
      *
      */
-    public static class SeaMap extends HashMap<String, Sea> {
+    public static class SeaMap extends HashMap<String, SeaModel> {
 
         private static final long serialVersionUID = -3383002236091475738L;
 
-        public void addSea(Sea s) {
+        public void addSea(SeaModel s) {
             this.put(s.getSeaid(), s);
         }
 
         public void addSources(RiverLakeMap map) {
-            for (Sea s : values()) {
-                s.addSources(map);
-            }
-        }
-    }
-
-    /**
-     * Model: River|Lake.
-     * 
-     * @author Chenfeng Zhu
-     *
-     */
-    public static class RiverLake {
-        String rlid = null;
-        String name = null;
-        double length;
-        Set<RiverLake> sources;
-        Set<String> tos;
-
-        public RiverLake() {
-            this.sources = new HashSet<RiverLake>(0);
-            this.tos = new HashSet<String>(0);
-        }
-
-        public String getRlid() {
-            return rlid;
-        }
-
-        public void setRlid(String rlid) {
-            this.rlid = rlid;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public double getLength() {
-            return length;
-        }
-
-        public void setLength(double length) {
-            this.length = length;
-        }
-
-        public Set<RiverLake> getSources() {
-            return sources;
-        }
-
-        public void setSources(Set<RiverLake> sources) {
-            this.sources = sources;
-        }
-
-        public Set<String> getTos() {
-            return tos;
-        }
-
-        public void setTos(Set<String> tos) {
-            this.tos = tos;
-        }
-
-        public double getTransitiveLength(int depth) {
-            if (depth > DEPTH) { // in case of endless recurse.
-                return 0;
-            }
-            double t_length = length;
-            for (RiverLake r : sources) {
-                t_length += r.getTransitiveLength(depth + 1);
-            }
-            return t_length;
-        }
-
-        public void addSource(RiverLake r) {
-            if (true && (r.getRlid() == null || tos.contains(r.getRlid()))) {
-                return;
-            }
-            sources.add(r);
-        }
-
-        public void addDestination(String water) {
-            tos.add(water);
-        }
-
-        @Override
-        public int hashCode() {
-            final int prime = 31;
-            int result = 1;
-            result = prime * result + ((rlid == null) ? 0 : rlid.hashCode());
-            return result;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj)
-                return true;
-            if (obj == null)
-                return false;
-            if (getClass() != obj.getClass())
-                return false;
-            RiverLake other = (RiverLake) obj;
-            if (rlid == null) {
-                if (other.rlid != null) {
-                    return false;
+            for (SeaModel s : values()) {
+                if (s == null || s.getSeaid() == null) {
+                    continue;
                 }
-            } else if (!rlid.equals(other.rlid)) {
-                return false;
+                for (String rlid : map.keySet()) {
+                    RiverLakeModel rl = map.get(rlid);
+                    if (rl.getRlid() != null && rl.getTos().contains(s.getSeaid())) {
+                        s.addSource(rl);
+                    }
+                }
             }
-            return true;
         }
-
-        @Override
-        public String toString() {
-            return rlid + "(" + name + "," + length + ")";
-        }
-
     }
 
     /**
@@ -393,18 +182,18 @@ public class MyDigester2 {
      * @author Chenfeng Zhu
      *
      */
-    public static class RiverLakeMap extends HashMap<String, RiverLake> {
+    public static class RiverLakeMap extends HashMap<String, RiverLakeModel> {
 
         private static final long serialVersionUID = 1314892391752832612L;
 
-        public void addRiverLake(RiverLake rl) {
+        public void addRiverLake(RiverLakeModel rl) {
             this.put(rl.getRlid(), rl);
         }
 
         public void reverseConnection() {
-            for (RiverLake rl : values()) {
+            for (RiverLakeModel rl : values()) {
                 for (String dest_id : rl.tos) {
-                    RiverLake d = get(dest_id);
+                    RiverLakeModel d = get(dest_id);
                     if (d != null && !d.tos.contains(rl.rlid)) { // in case of endless recurse.
                         d.addSource(rl);
                     }
