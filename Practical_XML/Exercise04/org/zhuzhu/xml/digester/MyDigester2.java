@@ -23,9 +23,10 @@ import org.xml.sax.SAXException;
  */
 public class MyDigester2 {
 
-    private String sourcePath = "/usr/workspace/xml/mondial_digester.xml"; // mondial_digester
+    private String sourcePath = "/usr/workspace/xml/mondial.xml"; // mondial_digester
 
     private final static String INDENT = "    ";
+    private final static int DEPTH = 20;
 
     public static void main(String... strings) {
         String sourcePath = null;
@@ -44,11 +45,15 @@ public class MyDigester2 {
         System.out.println("Source XML File: " + sourcePath);
     }
 
+    /**
+     * Get all sea and river.
+     */
     public void seaAllRiver() {
         File file = new File(sourcePath);
         SeaMap seamap = null;
         RiverLakeMap riverlakemap = null;
 
+        // read all sea.
         Digester digester = new Digester();
         digester.push(new SeaMap());
         digester.addRule("", new ObjectCreateRule(Sea.class) {
@@ -59,7 +64,6 @@ public class MyDigester2 {
         digester.addSetProperties("mondial/sea", "id", "seaid");
         digester.addBeanPropertySetter("mondial/sea/name", "name");
         digester.addSetNext("mondial/sea", "addSea");
-
         try {
             digester.setValidating(false);
             seamap = digester.parse(file);
@@ -70,6 +74,7 @@ public class MyDigester2 {
             e.printStackTrace();
         }
 
+        // read all rivers or lakes.
         Digester digester2 = new Digester();
         digester2.push(new RiverLakeMap());
         digester2.addRule("", new ObjectCreateRule(RiverLake.class) {
@@ -89,7 +94,6 @@ public class MyDigester2 {
         digester2.addCallMethod("mondial/lake/to", "addDestination", 1);
         digester2.addCallParam("mondial/lake/to", 0, "water");
         digester2.addSetNext("mondial/lake", "addRiverLake");
-
         try {
             digester2.setValidating(false);
             riverlakemap = digester2.parse(file);
@@ -102,10 +106,22 @@ public class MyDigester2 {
             e.printStackTrace();
         }
 
+        // add river to sea's source.
         seamap.addSources(riverlakemap);
+
         printSea(seamap.get("sea-Nordsee"));
+        // print all sea.
+        for (String id : seamap.keySet()) {
+            Sea s = seamap.get(id);
+            printSea(s);
+        }
     }
 
+    /**
+     * Print the sea in a well-format.
+     * 
+     * @param sea
+     */
     public void printSea(Sea sea) {
         System.out.println(sea.toString() + " TotalLength: " + sea.getTransitiveLength());
         for (RiverLake rl : sea.sources) {
@@ -113,14 +129,20 @@ public class MyDigester2 {
         }
     }
 
+    /**
+     * Print the river/lake in a well-format.
+     * 
+     * @param rl
+     * @param depth
+     */
     public void printRiverLake(RiverLake rl, int depth) {
-        if (depth > 10) {
+        if (depth > DEPTH) { // in case of endless recurse.
             return;
         }
         for (int i = 0; i < depth; i++) {
             System.out.print(INDENT);
         }
-        System.out.println("-" + rl.toString() + " TotalLength: " + rl.getTransitiveLength());
+        System.out.println("-" + rl.toString() + " TotalLength: " + rl.getTransitiveLength(1));
         for (RiverLake r : rl.sources) {
             printRiverLake(r, depth + 1);
         }
@@ -136,7 +158,7 @@ public class MyDigester2 {
     public static class Sea {
         String seaid = null;
         String name = null;
-        int length;
+        double length;
         Set<RiverLake> sources;
 
         public Sea() {
@@ -159,11 +181,11 @@ public class MyDigester2 {
             this.name = name;
         }
 
-        public int getLength() {
+        public double getLength() {
             return length;
         }
 
-        public void setLength(int length) {
+        public void setLength(double length) {
             this.length = length;
         }
 
@@ -175,10 +197,10 @@ public class MyDigester2 {
             this.sources = sources;
         }
 
-        public int getTransitiveLength() {
-            int t_length = length;
+        public double getTransitiveLength() {
+            double t_length = length;
             for (RiverLake r : sources) {
-                t_length += r.getTransitiveLength();
+                t_length += r.getTransitiveLength(1);
             }
             return t_length;
         }
@@ -230,6 +252,12 @@ public class MyDigester2 {
         }
     }
 
+    /**
+     * A map for sea.
+     * 
+     * @author Chenfeng Zhu
+     *
+     */
     public static class SeaMap extends HashMap<String, Sea> {
 
         private static final long serialVersionUID = -3383002236091475738L;
@@ -254,7 +282,7 @@ public class MyDigester2 {
     public static class RiverLake {
         String rlid = null;
         String name = null;
-        int length;
+        double length;
         Set<RiverLake> sources;
         Set<String> tos;
 
@@ -279,11 +307,11 @@ public class MyDigester2 {
             this.name = name;
         }
 
-        public int getLength() {
+        public double getLength() {
             return length;
         }
 
-        public void setLength(int length) {
+        public void setLength(double length) {
             this.length = length;
         }
 
@@ -303,10 +331,13 @@ public class MyDigester2 {
             this.tos = tos;
         }
 
-        public int getTransitiveLength() {
-            int t_length = length;
+        public double getTransitiveLength(int depth) {
+            if (depth > DEPTH) { // in case of endless recurse.
+                return 0;
+            }
+            double t_length = length;
             for (RiverLake r : sources) {
-                t_length += r.getTransitiveLength();
+                t_length += r.getTransitiveLength(depth + 1);
             }
             return t_length;
         }
@@ -356,6 +387,12 @@ public class MyDigester2 {
 
     }
 
+    /**
+     * A map for river/lake.
+     * 
+     * @author Chenfeng Zhu
+     *
+     */
     public static class RiverLakeMap extends HashMap<String, RiverLake> {
 
         private static final long serialVersionUID = 1314892391752832612L;
@@ -368,7 +405,7 @@ public class MyDigester2 {
             for (RiverLake rl : values()) {
                 for (String dest_id : rl.tos) {
                     RiverLake d = get(dest_id);
-                    if (d != null) {
+                    if (d != null && !d.tos.contains(rl.rlid)) { // in case of endless recurse.
                         d.addSource(rl);
                     }
                 }
