@@ -35,7 +35,12 @@ import org.zhuzhu.xml.jaxb.TerminCalendar.Schedule.Year.Month;
 import org.zhuzhu.xml.jaxb.TerminCalendar.Schedule.Year.Month.Day;
 
 /**
- * Application: Personal Schedule.
+ * Application: Personal Schedule using JAXB.<br/>
+ * Usage:
+ * <ol>
+ * <li>Generate the codes for models: <code>xjc -p org.zhuzhu.xml.jaxb [path_of_xsd] -d [output_directory]</code></li>
+ * <li>Compile the codes: <code>javac -d . `find ./org/zhuzhu/xml/jaxb -name '*.java'`</code></li>
+ * </ol>
  * 
  * @author Chenfeng Zhu
  *
@@ -56,11 +61,11 @@ public class PersonalSchedule {
         }
         String schema = null;
         if (strings.length >= 2) {
-            schema = strings[0];
+            schema = strings[1];
         }
         String output = null;
         if (strings.length >= 3) {
-            output = strings[0];
+            output = strings[2];
         }
 
         PersonalSchedule ps = new PersonalSchedule(source, schema, output);
@@ -74,32 +79,42 @@ public class PersonalSchedule {
         // add a collision-free entry.
         System.out.println("**Add a collision-free entry:");
         Calendar c1 = Calendar.getInstance();
-        c1.set(2017, 2, 6, 14, 0, 0);
+        c1.set(2017, Calendar.FEBRUARY, 6, 14, 0, 0);
         ps.insertEntry(c1, dur, title);
-        c1.set(2017, 4, 7, 11, 0, 0);
+        System.out.println("**Add a collision-free entry:");
+        c1.set(2017, Calendar.APRIL, 7, 11, 0, 0);
         ps.insertEntry(c1, dur, title);
+        System.out.println("**Add a collision-free entry:");
+        Calendar c0 = Calendar.getInstance();
+        c0.set(2016, Calendar.DECEMBER, 24, 19, 0, 0);
+        ps.insertEntry(c0, dur, "Weilnachten");
 
         // add a exactly collision entry.
         System.out.println("**Add a exactly collision entry:");
         Calendar c2 = Calendar.getInstance();
-        c2.set(2017, 2, 14, 14, 00, 0);
+        c2.set(2017, Calendar.FEBRUARY, 14, 14, 00, 0);
         ps.insertEntry(c2, dur, title);
 
         // add a early collision entry.
         System.out.println("**Add a early collision entry:");
         Calendar c3 = Calendar.getInstance();
-        c3.set(2017, 2, 14, 13, 30, 0);
+        c3.set(2017, Calendar.FEBRUARY, 14, 13, 30, 0);
         ps.insertEntry(c3, dur, title);
 
         // add a late collision entry.
         System.out.println("**Add a late collision entry:");
         Calendar c4 = Calendar.getInstance();
-        c4.set(2017, 2, 14, 14, 30, 0);
+        c4.set(2017, Calendar.FEBRUARY, 14, 14, 30, 0);
         ps.insertEntry(c4, dur, title);
-        c4.set(2017, 3, 2, 11, 30, 0);
+        System.out.println("**Add a late collision entry:");
+        c4.set(2017, Calendar.MARCH, 2, 11, 30, 0);
         ps.insertEntry(c4, null, title);
 
+        // transform the result.
         ps.transform();
+
+        // validate the new output.
+        ps.validateOutput();
     }
 
     public PersonalSchedule(String source, String schema, String output) {
@@ -170,7 +185,7 @@ public class PersonalSchedule {
     public boolean insertEntry(Calendar calendar, String strDuration, String title) {
         boolean flag = true;
         int y = calendar.get(Calendar.YEAR);
-        int m = calendar.get(Calendar.MONTH);
+        int m = calendar.get(Calendar.MONTH) + 1; // month in calendar starts in 0.
         int d = calendar.get(Calendar.DAY_OF_MONTH);
         int h = calendar.get(Calendar.HOUR_OF_DAY);
         int mi = calendar.get(Calendar.MINUTE);
@@ -196,11 +211,6 @@ public class PersonalSchedule {
                     if (year.getN().getYear() != y) {
                         continue;
                     }
-                    // used for ordering
-                    // if (year.getN().getYear() < y) {
-                    // continue;
-                    // } else if (year.getN().getYear() > y) {
-                    // }
                     for (Month month : year.getMonth()) {
                         if (month.getN() != m) {
                             continue;
@@ -230,27 +240,45 @@ public class PersonalSchedule {
                                     flag = false;
                                     System.out.println("FALSE: There is already an meeting during this time: " + et);
                                     System.out.println("Existing(" + et.getName() + "): " + starttime + " ~ " + endtime);
-                                    System.out.println("New(" + newentry.getName() + "): " + newstart + " ~ " + newend);
+                                    System.out.println("New(" + newentry.getName() + "): " + newstart + " ~ " + newend + "\n");
                                     return flag;
                                 }
                             }
                             if (flag) { // if there is another meeting on this day, add an entry to this day.
                                 day.getEntry().add(newentry);
-                                System.out.println("Add a new Entry: " + newentry);
+                                System.out.println("Add a new Entry: " + newentry + "\n");
                                 return flag;
                             }
                         }
                         if (flag) { // if there is no meetings on this day, add an entry to a new day.
+                            int p = month.getDay().size();
+                            for (Day day : month.getDay()) {
+                                if (day.getN() < d) {
+                                    continue;
+                                } else {
+                                    p = month.getDay().indexOf(day);
+                                    break;
+                                }
+                            }
                             Day newday = new Day();
                             newday.setN(d);
                             newday.getEntry().add(newentry);
                             System.out.println("Add a new Entry: " + newentry);
-                            month.getDay().add(newday);
-                            System.out.println("Add a new Day: " + newday);
+                            month.getDay().add(p, newday);
+                            System.out.println("Add a new Day: " + newday.getN() + "\n");
                             return flag;
                         }
                     }
                     if (flag) { // if there is no meetings on this month, add an entry to a new month.
+                        int p = year.getMonth().size();
+                        for (Month month : year.getMonth()) {
+                            if (month.getN() < m) {
+                                continue;
+                            } else {
+                                p = year.getMonth().indexOf(month);
+                                break;
+                            }
+                        }
                         Month newmonth = new Month();
                         newmonth.setN(m);
                         Day newday = new Day();
@@ -258,13 +286,22 @@ public class PersonalSchedule {
                         newday.getEntry().add(newentry);
                         System.out.println("Add a new Entry: " + newentry);
                         newmonth.getDay().add(newday);
-                        System.out.println("Add a new Day: " + newday);
-                        year.getMonth().add(newmonth);
-                        System.out.println("Add a new Month: " + newmonth);
+                        System.out.println("Add a new Day: " + newday.getN());
+                        year.getMonth().add(p, newmonth);
+                        System.out.println("Add a new Month: " + newmonth.getN() + "\n");
                         return flag;
                     }
                 }
-                if (flag) { // if there is no meetings on this year, add an entry to a new year.
+                if (flag) { // if there is no meetings on this year, add an entry to a new year in a right position.
+                    int p = schedule.getYear().size();
+                    for (Year year : schedule.getYear()) {
+                        if (year.getN().getYear() < y) {
+                            continue;
+                        } else {
+                            p = schedule.getYear().indexOf(year);
+                            break;
+                        }
+                    }
                     Year newyear = new Year();
                     newyear.setN(datatypeFactory.newXMLGregorianCalendarDate(y, DatatypeConstants.FIELD_UNDEFINED,
                             DatatypeConstants.FIELD_UNDEFINED, DatatypeConstants.FIELD_UNDEFINED));
@@ -275,11 +312,11 @@ public class PersonalSchedule {
                     newday.getEntry().add(newentry);
                     System.out.println("Add a new Entry: " + newentry);
                     newmonth.getDay().add(newday);
-                    System.out.println("Add a new Day: " + newday);
+                    System.out.println("Add a new Day: " + newday.getN());
                     newyear.getMonth().add(newmonth);
-                    System.out.println("Add a new Month: " + newmonth);
-                    schedule.getYear().add(newyear);
-                    System.out.println("Add a new Year: " + newyear);
+                    System.out.println("Add a new Month: " + newmonth.getN());
+                    schedule.getYear().add(p, newyear);
+                    System.out.println("Add a new Year: " + newyear.getN() + "\n");
                     return flag;
                 }
             }
@@ -311,7 +348,24 @@ public class PersonalSchedule {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    public void validateOutput() {
+        System.out.println("Validating the new output:");
+        try {
+            JAXBContext jc = JAXBContext.newInstance("org.zhuzhu.xml.jaxb");
+            Unmarshaller unmarshaller = jc.createUnmarshaller();
+            SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            Schema schema = schemaFactory.newSchema(new File(schemaPath));
+            unmarshaller.setSchema(schema);
+            unmarshaller.unmarshal(new File(outputPath));
+            System.out.println("PASS: '" + outputPath + "' against '" + schemaPath + "'.\n");
+        } catch (JAXBException e) {
+            System.out.println("ERROR");
+            // e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        }
     }
 
 }
