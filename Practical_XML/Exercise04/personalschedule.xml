@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TerminCalendar xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="personalschedule.xsd">
+    <schedule name="Chenfeng Zhu">
+        <year n="2017">
+            <month n="2">
+                <day n="3">
+                    <entry starttime="11:00:00" duration="PT01H30M">
+                        <name>XML lab meeting</name>
+                        <description>This is a meeting for exercise 04.</description>
+                        <location>CIP Room</location>
+                    </entry>
+                </day>
+                <day n="14">
+                    <entry starttime="14:00:00" duration="PT02H">
+                        <name>DS Exam</name>
+                    </entry>
+                </day>
+            </month>
+            <month n="3">
+                <day n="2">
+                    <entry starttime="11:00:00" duration="PT45M">
+                        <name>SDF Exam</name>
+                    </entry>
+                </day>
+            </month>
+        </year>
+    </schedule>
+</TerminCalendar>
