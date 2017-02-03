@@ -5,6 +5,7 @@
 package org.zhuzhu.xml.jaxb;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import javax.xml.XMLConstants;
@@ -20,10 +21,13 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
@@ -50,6 +54,8 @@ public class PersonalSchedule {
     private String sourcePath = "/usr/workspace/xml/XMLDB/Practical_XML/Exercise04/personalschedule.xml";
     private String schemaPath = "/usr/workspace/xml/XMLDB/Practical_XML/Exercise04/personalschedule.xsd";
     private String outputPath = "/usr/workspace/xml/newschedule.xml";
+    private String xsltPath = "/usr/workspace/xml/XMLDB/Practical_XML/Exercise04/personalschedule.xsl";
+    private String outputDirectory = "/usr/workspace/xml/";
 
     private JAXBContext jaxbContext;
     private TerminCalendar tc;
@@ -67,8 +73,16 @@ public class PersonalSchedule {
         if (strings.length >= 3) {
             output = strings[2];
         }
+        String xslt = null;
+        if (strings.length >= 4) {
+            xslt = strings[3];
+        }
+        String ym = null;
+        if (strings.length >= 5) {
+            ym = strings[4];
+        }
 
-        PersonalSchedule ps = new PersonalSchedule(source, schema, output);
+        PersonalSchedule ps = new PersonalSchedule(source, schema, output, xslt);
 
         // print all schedule.
         ps.printAllSchedule();
@@ -115,9 +129,12 @@ public class PersonalSchedule {
 
         // validate the new output.
         ps.validateOutput();
+
+        // transform with XSLT.
+        ps.xslt(ym);
     }
 
-    public PersonalSchedule(String source, String schema, String output) {
+    public PersonalSchedule(String source, String schema, String output, String xslt) {
         if (source != null && !("".equalsIgnoreCase(source))) {
             this.sourcePath = source;
         }
@@ -126,10 +143,16 @@ public class PersonalSchedule {
         }
         if (output != null && !("".equalsIgnoreCase(output))) {
             this.outputPath = output;
+            this.outputDirectory = output.substring(0, output.lastIndexOf("/"));
+        }
+        if (xslt != null && !("".equalsIgnoreCase(xslt))) {
+            this.xsltPath = xslt;
         }
         System.out.println("Source XML File: " + sourcePath);
         System.out.println("Schema File: " + schemaPath);
         System.out.println("Output File: " + outputPath);
+        System.out.println("Output Directory: " + outputDirectory);
+        System.out.println("XSLT File: " + xsltPath);
     }
 
     /**
@@ -345,11 +368,18 @@ public class PersonalSchedule {
             Transformer transformer = factory.newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.transform(docSource, result);
-        } catch (Exception e) {
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        } catch (TransformerConfigurationException e) {
+            e.printStackTrace();
+        } catch (TransformerException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Validate the output.
+     */
     public void validateOutput() {
         System.out.println("Validating the new output:");
         try {
@@ -364,6 +394,39 @@ public class PersonalSchedule {
             System.out.println("ERROR");
             // e.printStackTrace();
         } catch (SAXException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Apply an XSLT transformation.
+     */
+    public void xslt(String yearmonth) {
+        if (yearmonth == null) {
+            Calendar c = Calendar.getInstance();
+            yearmonth = (new SimpleDateFormat("yyyyMM")).format(c.getTime());
+        }
+        System.out.println("Input month: " + yearmonth);
+        String htmlPath = outputDirectory + "schedule" + yearmonth + ".html";
+        System.out.println("Output into file: " + htmlPath);
+        System.out.println("XSLT Transforming:");
+        try {
+            Marshaller m = jaxbContext.createMarshaller();
+            DOMResult domResult = new DOMResult();
+            m.marshal(tc, domResult);
+            Document doc = (Document) domResult.getNode();
+            Source docSource = new DOMSource(doc);
+
+            TransformerFactory factory = TransformerFactory.newInstance();
+            Transformer transformer = factory.newTransformer(new StreamSource(xsltPath)); // Source of XSLT document
+            transformer.setParameter("yearmonth", yearmonth);
+            transformer.transform(docSource, new StreamResult(System.out));
+            transformer.transform(docSource, new StreamResult(new File(htmlPath)));
+        } catch (TransformerConfigurationException e) {
+            e.printStackTrace();
+        } catch (TransformerException e) {
+            e.printStackTrace();
+        } catch (JAXBException e) {
             e.printStackTrace();
         }
     }
