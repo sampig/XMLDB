@@ -143,7 +143,7 @@ public class PersonalSchedule {
         }
         if (output != null && !("".equalsIgnoreCase(output))) {
             this.outputPath = output;
-            this.outputDirectory = output.substring(0, output.lastIndexOf("/"));
+            this.outputDirectory = output.substring(0, output.lastIndexOf("/") + 1);
         }
         if (xslt != null && !("".equalsIgnoreCase(xslt))) {
             this.xsltPath = xslt;

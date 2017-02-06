@@ -4,8 +4,8 @@
  */
 package org.zhuzhu.xml.digester;
 
-import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Model: River|Lake.
@@ -13,19 +13,20 @@ import java.util.Set;
  * @author Chenfeng Zhu
  *
  */
-public class RiverLakeModel {
+public class RiverLakeModel implements Comparable<RiverLakeModel> {
 
     private final static int DEPTH = 20;
 
     String rlid = null;
     String name = null;
     double length;
+    double elevationEstuary;
     Set<RiverLakeModel> sources;
     Set<String> tos;
 
     public RiverLakeModel() {
-        this.sources = new HashSet<RiverLakeModel>(0);
-        this.tos = new HashSet<String>(0);
+        this.sources = new TreeSet<RiverLakeModel>();
+        this.tos = new TreeSet<String>();
     }
 
     public String getRlid() {
@@ -50,6 +51,14 @@ public class RiverLakeModel {
 
     public void setLength(double length) {
         this.length = length;
+    }
+
+    public double getElevationEstuary() {
+        return elevationEstuary;
+    }
+
+    public void setElevationEstuary(double elevationEstuary) {
+        this.elevationEstuary = elevationEstuary;
     }
 
     public Set<RiverLakeModel> getSources() {
@@ -119,7 +128,17 @@ public class RiverLakeModel {
 
     @Override
     public String toString() {
-        return rlid + "(" + name + "," + length + ")";
+        return rlid + "(" + name + ",l:" + length + ",e:" + elevationEstuary + ")";
+    }
+
+    @Override
+    public int compareTo(RiverLakeModel o) {
+        if (this.elevationEstuary < o.elevationEstuary) {
+            return -1;
+        } else if (this.elevationEstuary > o.elevationEstuary) {
+            return 1;
+        }
+        return 0;
     }
 
 }

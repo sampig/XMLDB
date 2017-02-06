@@ -69,6 +69,7 @@ public class MyDigester {
         digester.addSetProperties("mondial/river", "id", "rlid");
         digester.addBeanPropertySetter("mondial/river/name", "name");
         digester.addBeanPropertySetter("mondial/river/length", "length");
+        digester.addBeanPropertySetter("mondial/river/estuary/elevation", "elevationEstuary");
         digester.addCallMethod("mondial/river/to", "addDestination", 1);
         digester.addCallParam("mondial/river/to", 0, "water");
         digester.addSetNext("mondial/river", "addRiverLake");

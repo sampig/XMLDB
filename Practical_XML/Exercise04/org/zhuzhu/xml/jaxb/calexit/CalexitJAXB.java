@@ -273,6 +273,7 @@ public class CalexitJAXB {
                         }
                         System.out.println("Population of country: " + lPopCountry);
                         System.out.println("Population of province: " + lPopProvince);
+                        lPopCountry = lPopCountry + lPopProvince;
                         long lPopCurrent = lPopCountry - lPopProvince;
                         double popgrowthNew = (ctry.getPopulationGrowth().doubleValue() * lPopCountry
                                 - califor.getPopulationGrowth().doubleValue() * lPopProvince) / lPopCurrent;
