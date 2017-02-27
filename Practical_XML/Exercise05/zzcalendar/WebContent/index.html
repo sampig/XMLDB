@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="css/main.css"/>
+<script type="text/javascript" src="js/changexml.js"></script>
+<title>Zhuzhu Calendar</title>
+</head>
+<body>
+    <div class="container">
+        <a href="showcalendar">Show Calendar</a>
+    </div>
+    <div class="container container-form">
+        <h2>Filter Entries</h2>
+        <form action="entrylist" method="POST">
+            <label><b>Start date</b></label>
+            <input type="text" placeholder="Enter start date (format: yyyy-MM-dd)" name="startdate" required/>
+            <label><b>End date</b></label>
+            <input type="text" placeholder="Enter end date (format: yyyy-MM-dd)" name="enddate" required />
+            <label><b>Duration (hours)</b></label>
+            <input type="text" placeholder="Enter duration (format: hh)" name="duration" required/>
+            <button type="submit">Entry List</button>
+        </form>
+    </div>
+    <div class="container container-form">
+        <h2>Change XML Source</h2>
+        <label><b>Schedule source</b></label><br/>
+        <input id="radio01" type="radio" name="xmltype" value="default" onclick="changetype()"> Default<br/>
+        <input id="radio02" type="radio" name="xmltype" value="manual" onclick="changetype()"> URL<br/>
+        <input id="id-url" type="text" placeholder="Enter url (format: http://... or https://...)" name="url" disabled/>
+        <div class="clearfix">
+            <button id="btnChange" type="button" onclick="changexml()" disabled>Change</button>
+        </div>
+    </div>
+</body>
+</html>

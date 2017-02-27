@@ -1,0 +1,49 @@
+<div class="container">
+    <label><b>Schedule source</b></label><br/>
+    <input id="radio01" type="radio" name="xmltype" value="default" onclick="changetype()" checked> Default<br/>
+    <input id="radio02" type="radio" name="xmltype" value="manual" onclick="changetype()"> URL<br/>
+    <input id="id-url" type="text" placeholder="Enter url (format: http://... or https://...)" name="url" disabled/>
+    <div class="clearfix">
+        <button type="button" class="signupbtn" onclick="changexml()">Change</button>
+    </div>
+</div>
+
+<script>
+  function changetype() {
+    var r1 = document.getElementById("radio01").checked;
+    var r2 = document.getElementById("radio02").checked;
+    var urlinput = document.getElementById("id-url");
+    if (r1 == true) {
+      urlinput.disabled = true;
+    }
+    if (r2 == true) {
+      urlinput.disabled = false;
+    }
+  }
+  function changexml() {
+    var r1 = document.getElementById("radio01").checked;
+    var r2 = document.getElementById("radio02").checked;
+    var urlinput = document.getElementById("id-url");
+    if (r1 == true) {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange=function() {
+        if (this.readyState == 4 && this.status == 200) {
+          alert("reset xml");
+        }
+      };
+      xhttp.open("GET", "resetxml", true);
+      xhttp.send();
+    }
+    if (r2 == true) {
+      var newpath = urlinput.value;
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange=function() {
+        if (this.readyState == 4 && this.status == 200) {
+          alert("change xml: " + newpath);
+        }
+      };
+      xhttp.open("GET", "changexml?xmlpath=" + newpath, true);
+      xhttp.send();
+    }
+  }
+</script>

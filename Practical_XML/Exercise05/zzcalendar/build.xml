@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE project>
+<project name="zzcalendar" default="compile" basedir=".">
+
+	<property environment="env" />
+	<property name="catalina.home" value="${env.CATALINA_HOME}" />
+	<property name="java.home" value="${env.JAVA_HOME}" />
+	<property name="webapps.path" location="${catalina.home}/webapps" />
+	<property name="name" value="zzcalendar" />
+	<property name="deploy.path" location="${webapps.path}/${name}" />
+	<property name="web.dir" value="WebContent" />
+	<property name="class.dir" value="${web.dir}/WEB-INF/classes" />
+	<property name="lib.dir" value="${web.dir}/WEB-INF/lib" />
+	<property name="compile-time-lib.dir" value="lib" />
+	<property name="src.dir" value="src" />
+	<property name="srcjaxb.dir" value="src_jaxb" />
+	<property name="resource.dir" value="resources" />
+	<property name="war.dir" value="dist" />
+
+	<path id="classpath">
+		<fileset dir="${compile-time-lib.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+		<fileset dir="${lib.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<target name="compile">
+		<mkdir dir="${class.dir}" />
+		<javac destdir="${class.dir}" debug="on" encoding="UTF-8" classpathref="classpath" includeantruntime="true">
+			<src>
+				<pathelement location="${src.dir}" />
+				<pathelement location="${srcjaxb.dir}" />
+				<pathelement location="${resource.dir}" />
+			</src>
+		</javac>
+
+		<!-- <copy file="${resource.dir}/log4j.properties" todir="${class.dir}" /> -->
+		<copy file="${resource.dir}/config.properties" todir="${class.dir}" />
+	</target>
+
+	<target name="dist" depends="compile">
+		<mkdir dir="${war.dir}" />
+		<war warfile="${war.dir}/${name}.war" webxml="${web.dir}/WEB-INF/web.xml">
+			<classes dir="${class.dir}">
+				<include name="**/*" />
+			</classes>
+			<!-- note: javax.servlet.jar is not included because it will conflict
+			     with tomcat's own class defs for javax.Servlet-->
+			<lib dir="${lib.dir}">
+				<include name="**/*" />
+			</lib>
+			<fileset dir="${web.dir}">
+				<include name="*.html" />
+				<include name="css/*" />
+				<include name="js/*.js" />
+			</fileset>
+		</war>
+	</target>
+
+	<target name="deploy-war" depends="dist">
+		<copy file="${war.dir}/${name}.war" todir="${webapps.path}" />
+	</target>
+
+	<!-- Alternative: deploy by copying the whole WebContent/WEB-INF directory -->
+	<target name="deploy" depends="compile" description="deploy project to server">
+		<mkdir dir="${deploy.path}" />
+		<sync todir="${deploy.path}" verbose="true">
+			<fileset dir="${web.dir}" />
+		</sync>
+	</target>
+
+</project>

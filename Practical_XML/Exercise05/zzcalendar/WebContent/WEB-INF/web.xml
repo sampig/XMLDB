@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://java.sun.com/xml/ns/javaee"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+  version="3.0">
+  <servlet>
+    <description>This is a Servlet for showing calendar.</description>
+    <servlet-name>ShowCalendarServlet</servlet-name>
+    <servlet-class>org.zhuzhu.zzcalendar.servlet.ShowCalendarServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is a Servlet for config properties.</description>
+    <servlet-name>ConfigPropertiesServlet</servlet-name>
+    <servlet-class>org.zhuzhu.zzcalendar.servlet.ConfigPropertiesServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is a Servlet for add new entries.</description>
+    <servlet-name>AddEntryServlet</servlet-name>
+    <servlet-class>org.zhuzhu.zzcalendar.servlet.AddEntryServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is a Servlet for listing entries.</description>
+    <servlet-name>EntryListServlet</servlet-name>
+    <servlet-class>org.zhuzhu.zzcalendar.servlet.EntryListServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ShowCalendarServlet</servlet-name>
+    <url-pattern>/showcalendar</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ConfigPropertiesServlet</servlet-name>
+    <url-pattern>/configproperties</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ConfigPropertiesServlet</servlet-name>
+    <url-pattern>/changexml</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ConfigPropertiesServlet</servlet-name>
+    <url-pattern>/resetxml</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>AddEntryServlet</servlet-name>
+    <url-pattern>/addentry</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>EntryListServlet</servlet-name>
+    <url-pattern>/entrylist</url-pattern>
+  </servlet-mapping>
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>index.html</welcome-file>
+  </welcome-file-list>
+</web-app>

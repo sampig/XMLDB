@@ -1,0 +1,13 @@
+
+*.jar
+*.war
+*.class
+
+.settings
+.ant-targets-build.xml
+
+/build
+/target
+/dist
+/WebContent/WEB-INF/classes
+
