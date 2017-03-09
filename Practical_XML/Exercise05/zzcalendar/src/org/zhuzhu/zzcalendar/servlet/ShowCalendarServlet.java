@@ -21,6 +21,8 @@ import org.zhuzhu.xml.jaxb.EntryType;
 import org.zhuzhu.xml.jaxb.TerminCalendar.Schedule.Year.Month;
 import org.zhuzhu.xml.jaxb.TerminCalendar.Schedule.Year.Month.Day;
 import org.zhuzhu.zzcalendar.util.CalendarUtils;
+import org.zhuzhu.zzcalendar.util.FormatUtils;
+import org.zhuzhu.zzcalendar.util.FormatUtils.DateType;
 import org.zhuzhu.zzcalendar.util.PropertyUtils;
 
 /**
@@ -54,8 +56,17 @@ public class ShowCalendarServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
             IOException {
+        PrintWriter out = response.getWriter();
         String year = request.getParameter("year");
+        if (year != null && !"".equals(year) && !FormatUtils.checkDateFormat(year, DateType.YEAR)) {
+            out.print(FormatUtils.getScript("The format of year is incorrect!"));
+            return;
+        }
         String month = request.getParameter("month");
+        if (month != null && !"".equals(month) && !FormatUtils.checkDateFormat(month, DateType.MONTH)) {
+            out.print(FormatUtils.getScript("The format of month is incorrect!"));
+            return;
+        }
         String day = request.getParameter("day");
         boolean withday = false;
         Calendar calendar = Calendar.getInstance();
@@ -69,12 +80,19 @@ public class ShowCalendarServlet extends HttpServlet {
         } else {
             calendar.set(Calendar.MONTH, Integer.parseInt(month) - 1);
         }
-        if (day != null) {
+        if (day != null && !"".equals(day)) {
+            if (!FormatUtils.checkDateFormat(day, DateType.DAY)) {
+                out.print(FormatUtils.getScript("The format of day is incorrect!"));
+                return;
+            }
             calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
             withday = true;
         }
-        PrintWriter out = response.getWriter();
-        out.print(this.createDocumentHeader("My Calendar: " + year + "-" + month));
+        if (withday) {
+            out.print(this.createDocumentHeader("My Calendar: " + year + "-" + month + "-" + day));
+        } else {
+            out.print(this.createDocumentHeader("My Calendar: " + year + "-" + month));
+        }
         out.print(this.createChangexml());
         out.print(this.createCalendar(calendar, withday));
         out.print(this.createAddEntry());

@@ -108,6 +108,15 @@ public class PropertyUtils {
     }
 
     /**
+     * Get the default value of web service url.
+     *
+     * @return
+     */
+    public static String getWebservice() {
+        return DefaultConstants.WEBSERVICE_URL_DEFAULT;
+    }
+
+    /**
      * Some default constants.
      *
      * @author Chenfeng Zhu
@@ -115,6 +124,7 @@ public class PropertyUtils {
      */
     class DefaultConstants {
         protected final static String SCHEDULE_XML_DEFAULT = "/usr/workspace/xml/newschedule.xml";
+        protected final static String WEBSERVICE_URL_DEFAULT = "http://localhost:8089/zzcalendar/entrylist";
     }
 
 }

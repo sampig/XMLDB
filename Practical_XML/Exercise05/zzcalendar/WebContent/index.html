@@ -19,6 +19,10 @@
             <input type="text" placeholder="Enter end date (format: yyyy-MM-dd)" name="enddate" required />
             <label><b>Duration (hours)</b></label>
             <input type="text" placeholder="Enter duration (format: hh)" name="duration" required/>
+            <label><b>Advanced</b></label><br/>
+            <input id="radioLocal" type="radio" name="sourcetype" value="local" onclick="changesource()" checked> Local Only
+            <input id="radioRemote" type="radio" name="sourcetype" value="remote" onclick="changesource()"> With Remote<br/>
+            <input id="id-service" type="text" placeholder="Enter web service url (format: http://... or https://...) (use default if blank)" name="webservice" disabled/>
             <button type="submit">Entry List</button>
         </form>
     </div>

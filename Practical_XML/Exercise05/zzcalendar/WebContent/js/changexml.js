@@ -12,6 +12,7 @@ function changetype() {
     btnChange.disabled = false;
   }
 }
+
 function changexml() {
   var r1 = document.getElementById("radio01").checked;
   var r2 = document.getElementById("radio02").checked;
@@ -36,5 +37,17 @@ function changexml() {
     };
     xhttp.open("GET", "changexml?xmlpath=" + newpath, true);
     xhttp.send();
+  }
+}
+
+function changesource() {
+  var r1 = document.getElementById("radioLocal").checked;
+  var r2 = document.getElementById("radioRemote").checked;
+  var sourceinput = document.getElementById("id-service");
+  if (r1 == true) {
+    sourceinput.disabled = true;
+  }
+  if (r2 == true) {
+    sourceinput.disabled = false;
   }
 }

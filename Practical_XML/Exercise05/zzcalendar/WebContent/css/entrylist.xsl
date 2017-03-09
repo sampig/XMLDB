@@ -17,6 +17,7 @@
             <th>Name</th>
             <th>Location</th>
             <th>Duration</th>
+            <th>Type</th>
           </tr>
           <xsl:apply-templates select="//entry" />
         </table>
@@ -41,6 +42,9 @@
       </td>
       <td>
         <xsl:value-of select="string(@duration)" />
+      </td>
+      <td>
+        <xsl:value-of select="string(../../../../@type)" />
       </td>
     </tr>
   </xsl:template>
