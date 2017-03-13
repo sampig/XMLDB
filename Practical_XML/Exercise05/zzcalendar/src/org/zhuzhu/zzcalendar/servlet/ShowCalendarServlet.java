@@ -320,13 +320,21 @@ public class ShowCalendarServlet extends HttpServlet {
     private String createChangexml() {
         StringBuilder sb = new StringBuilder();
         sb.append("<div class='change-xml-div'>\n");
-        try {
-            Path pathAddentry = Paths.get(getServletContext().getRealPath("/changexml.html"));
-            String contents = new String(Files.readAllBytes(pathAddentry));
-            sb.append(contents);
-        } catch (IOException e) {
-            e.printStackTrace();
+        PropertyUtils pu = new PropertyUtils();
+        String source = pu.getValue(PropertyUtils.KEY_SCHEDULE_XML);
+        sb.append("<b>XML Source</b>: ");
+        if (source != null && source.startsWith("http")) {
+            sb.append("<a href='" + source + "' target='_blank'>" + source + "</a>");
+        } else {
+            sb.append("local");
         }
+        // try {
+        // Path pathAddentry = Paths.get(getServletContext().getRealPath("/changexml.html"));
+        // String contents = new String(Files.readAllBytes(pathAddentry));
+        // sb.append(contents);
+        // } catch (IOException e) {
+        // e.printStackTrace();
+        // }
         sb.append("</div>");
         return sb.toString();
     }

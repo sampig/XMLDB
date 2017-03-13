@@ -51,3 +51,15 @@ function changesource() {
     sourceinput.disabled = false;
   }
 }
+
+function changesource2() {
+  var r1 = document.getElementById("radioLocal2").checked;
+  var r2 = document.getElementById("radioRemote2").checked;
+  var sourceinput = document.getElementById("id-service2");
+  if (r1 == true) {
+    sourceinput.disabled = true;
+  }
+  if (r2 == true) {
+    sourceinput.disabled = false;
+  }
+}

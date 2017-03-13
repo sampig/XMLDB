@@ -87,6 +87,7 @@ public class EntryListServlet extends HttpServlet {
             // add stylesheet declaration
             Node pi = doc.createProcessingInstruction("xml-stylesheet", "type=\"text/xsl\" href=\"css/entrylist.xsl\"");
             doc.insertBefore(pi, root);
+
             String sourcetype = request.getParameter("sourcetype");
             if ("local".equalsIgnoreCase(sourcetype)) {
                 TransformerFactory factory = TransformerFactory.newInstance();
@@ -106,7 +107,7 @@ public class EntryListServlet extends HttpServlet {
             } else if ("remote".equalsIgnoreCase(sourcetype)) {
                 String webservice = request.getParameter("webservice");
                 if (webservice == null || "".equals(webservice)) {
-                    webservice = PropertyUtils.getWebservice();
+                    webservice = PropertyUtils.getWebserviceEntry();
                 }
                 // System.out.println("webservice:" + webservice);
                 HttpURLConnection.setFollowRedirects(true);
@@ -143,10 +144,12 @@ public class EntryListServlet extends HttpServlet {
                     ((Element) scheduleNew).setAttribute("type", "remote");
                     ((Element) root.getElementsByTagName("schedule").item(0)).setAttribute("type", "local");
                     root.appendChild(scheduleNew);
-                } catch (ParserConfigurationException e1) {
-                    e1.printStackTrace();
-                } catch (SAXException e) {
+                } catch (ParserConfigurationException e) {
                     e.printStackTrace();
+                } catch (SAXException e) {
+                    // e.printStackTrace();
+                    out.print(FormatUtils.getScript("The content from web service is incorrect!"));
+                    return;
                 }
                 TransformerFactory factory = TransformerFactory.newInstance();
                 Source docSource = new DOMSource(doc);
@@ -174,6 +177,8 @@ public class EntryListServlet extends HttpServlet {
                 // }
                 // System.out.println(sb.toString());
                 connection.getInputStream().close();
+                out.flush();
+                out.close();
             }
         }
     }

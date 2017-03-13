@@ -8,8 +8,9 @@
 </head>
 <body>
     <div class="container">
-        <a href="showcalendar">Show Calendar</a>
+        <a href="showcalendar" target="_blank">Show Calendar</a>
     </div>
+    <!-- Show some entries -->
     <div class="container container-form">
         <h2>Filter Entries</h2>
         <form action="entrylist" method="POST">
@@ -18,7 +19,7 @@
             <label><b>End date</b></label>
             <input type="text" placeholder="Enter end date (format: yyyy-MM-dd)" name="enddate" required />
             <label><b>Duration (hours)</b></label>
-            <input type="text" placeholder="Enter duration (format: hh)" name="duration" required/>
+            <input type="text" placeholder="Enter duration (format: hh)" name="duration"/>
             <label><b>Advanced</b></label><br/>
             <input id="radioLocal" type="radio" name="sourcetype" value="local" onclick="changesource()" checked> Local Only
             <input id="radioRemote" type="radio" name="sourcetype" value="remote" onclick="changesource()"> With Remote<br/>
@@ -26,7 +27,26 @@
             <button type="submit">Entry List</button>
         </form>
     </div>
+    <!-- Show free slots -->
     <div class="container container-form">
+        <h2>Free Slots</h2>
+        <form action="freeslot" method="POST">
+            <label><b>Start date</b></label>
+            <input type="text" placeholder="Enter start date (format: yyyy-MM-dd)" name="startdate" required/>
+            <label><b>End date</b></label>
+            <input type="text" placeholder="Enter end date (format: yyyy-MM-dd)" name="enddate" required />
+            <label><b>Duration (hours)</b></label>
+            <input type="text" placeholder="Enter duration (format: hh)" name="duration" required/>
+            <label><b>Advanced</b></label><br/>
+            <input id="radioLocal2" type="radio" name="sourcetype" value="local" onclick="changesource2()" checked> Local Only
+            <input id="radioRemote2" type="radio" name="sourcetype" value="remote" onclick="changesource2()"> With Remote<br/>
+            <input id="id-service2" type="text" placeholder="Enter web service url (format: http://... or https://...) (use default if blank)" name="webservice" disabled/>
+            <button type="submit">Search</button>
+        </form>
+    </div>
+    <br/><br/>
+    <!-- Change XML source -->
+    <div class="container">
         <h2>Change XML Source</h2>
         <label><b>Schedule source</b></label><br/>
         <input id="radio01" type="radio" name="xmltype" value="default" onclick="changetype()"> Default<br/>

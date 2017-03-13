@@ -108,12 +108,21 @@ public class PropertyUtils {
     }
 
     /**
-     * Get the default value of web service url.
+     * Get the default value of web service url for entry list.
      *
      * @return
      */
-    public static String getWebservice() {
-        return DefaultConstants.WEBSERVICE_URL_DEFAULT;
+    public static String getWebserviceEntry() {
+        return DefaultConstants.WEBSERVICE_ENTRY_URL_DEFAULT;
+    }
+
+    /**
+     * Get the default value of web service url for free slot.
+     *
+     * @return
+     */
+    public static String getWebserviceSlot() {
+        return DefaultConstants.WEBSERVICE_SLOTS_URL_DEFAULT;
     }
 
     /**
@@ -124,7 +133,8 @@ public class PropertyUtils {
      */
     class DefaultConstants {
         protected final static String SCHEDULE_XML_DEFAULT = "/usr/workspace/xml/newschedule.xml";
-        protected final static String WEBSERVICE_URL_DEFAULT = "http://localhost:8089/zzcalendar/entrylist";
+        protected final static String WEBSERVICE_ENTRY_URL_DEFAULT = "http://localhost:8089/zzcalendar/entrylist";
+        protected final static String WEBSERVICE_SLOTS_URL_DEFAULT = "http://localhost:8089/zzcalendar/freeslot";
     }
 
 }
