@@ -75,7 +75,11 @@ public class AddEntryServlet extends HttpServlet {
         String strDescription = request.getParameter("description");
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month - 1, day, hour, minute, second);
-        CalendarUtils.addEntry(calendar, duration, strTitle, strDescription, strLocation);
+        boolean flag = CalendarUtils.addEntry(calendar, duration, strTitle, strDescription, strLocation);
+        if (!flag) {
+            out.print(FormatUtils.getScript("Fail to add the entry! Please check the collision!"));
+            return;
+        }
         response.sendRedirect("showcalendar?year=" + year + "&month=" + month + "&day=" + day);
     }
 

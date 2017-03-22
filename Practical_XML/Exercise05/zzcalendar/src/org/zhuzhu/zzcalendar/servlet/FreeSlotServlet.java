@@ -242,7 +242,7 @@ public class FreeSlotServlet extends HttpServlet {
                     int d = end.get(Calendar.HOUR_OF_DAY) - start.get(Calendar.HOUR_OF_DAY);
                     if (d >= durHour) {
                         out.print("<td bgcolor=\"green\" colspan=\"" + d + "\">" + (count++) + "</td>");
-                    } else {
+                    } else if (d > 0) {
                         out.print("<td bgcolor=\"blue\" colspan=\"" + d + "\"> </td>");
                     }
                     int etDur = et.getDuration().getHours();

@@ -107,7 +107,7 @@ public class FormatUtils {
      * @return
      */
     public static String getScript(String msg) {
-        return "<script>alert('" + msg + "');</script>";
+        return "<script>alert('" + msg + "');history.back();</script>";
     }
 
 }

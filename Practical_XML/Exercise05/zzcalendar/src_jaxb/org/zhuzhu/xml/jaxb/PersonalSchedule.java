@@ -9,6 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
@@ -332,7 +333,16 @@ public class PersonalSchedule {
                                 }
                             }
                             if (flag) { // if there is another meeting on this day, add an entry to this day.
-                                day.getEntry().add(newentry);
+                                List<EntryType> list = day.getEntry();
+                                int ie = 0;
+                                for (; ie < list.size(); ie++) {
+                                    EntryType et = list.get(ie);
+                                    XMLGregorianCalendar starttime = et.getStarttime();
+                                    if (newstart.compare(starttime) == DatatypeConstants.LESSER) {
+                                        break;
+                                    }
+                                }
+                                day.getEntry().add(ie, newentry);
                                 System.out.println("Add a new Entry: " + newentry + "\n");
                                 return flag;
                             }
