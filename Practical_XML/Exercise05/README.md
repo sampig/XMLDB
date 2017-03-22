@@ -26,6 +26,8 @@ bin/shutdown.sh
 ## References
 
 [Apache Tomcat](http://tomcat.apache.org/)
+
 [Calendar XML Example](https://user.informatik.uni-goettingen.de/~chenfeng.zhu/xml/ex04/newschedule.xml)
+
 [Calendar XSD](https://user.informatik.uni-goettingen.de/~chenfeng.zhu/xml/ex04/personalschedule.xsd)
 
